@@ -1,3 +1,5 @@
+// fake memory storage
+
 var Q = require('q'),
 	bd_Users = {},
 	bd_Messages = [];
