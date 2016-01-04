@@ -1,0 +1,37 @@
+.container{
+	position: absolute;
+	min-width: 0;
+	width:100%;
+	height: 100%;
+}
+.row,.col-md-3,.col-md-9{
+	height:100%;
+}
+.col-md-3.col-sm-3.col-lg-3.col-xs-3,
+.col-md-9.col-sm-9.col-lg-9.col-xs-9{
+	padding: 0;
+}
+div[data-role='block_users']{
+	border-right: 1px solid grey;
+	height:100%;
+	overflow: auto;
+}
+div[data-role='block_message_content']{
+	height: 65%;
+	border-bottom: 1px solid grey;
+	overflow: auto;
+}
+div[data-role='block_message']{
+	height:35%;
+	overflow: auto;
+}
+.openChat{
+	height: 100%;
+	font-size: xx-large;
+	outline: none;
+	background-color: azure;
+	color: grey;
+}
+.openChat:focus{
+	outline:none;
+}

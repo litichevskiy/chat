@@ -36,7 +36,7 @@ var storage = {
 
 		if ( !bd_Users.hasOwnProperty( user.login ) ){
 			bd_Users[user.login] = user;
-			defer.resolve();
+			defer.resolve( user );
 		} else {
 			defer.reject(new Error('user already exists'));
 		}
