@@ -1,12 +1,9 @@
-(function() {
+(function(exports) {
 
 	var log = $('input[name="login"]'),
-		passw = $('.password'),
-		button = $('.authorized'),
-		UNAUTHORIZED = 401,
-		QUANTITY = 10,
+		button = $('button[data-name="openChat"]'),
 		OK = 'success',
-		htmlElement = $('html');///////////////////////
+		htmlElement = $('body')[0];
 
 	function clearInput( int ) {
 		$(int).each(function(index, el) {
@@ -17,46 +14,59 @@
 
 	function checkResponse( res ) {
 
-		if( res.result === OK ){
+		if( res.result === OK ) {
 
-			serverStorage.getMainPage( htmlElement );
-		 	clearInput( [ log, passw ] );
-		 	return;
-		}
-		if ( res.status === UNAUTHORIZED ) {
+			$.ajax({url:'/page/chat', type:'get' })
+		 	.then( function(res){
 
-			serverStorage.createUser({
-				login    : log.val(),
-				password : passw.val()
-			}, checkResponse )
+		 		$(htmlElement).html( res );
+		 	})
+		 	.then(function(res){
 
-			clearInput( [ log, passw ] );
-			return;
+				$('input[data-role="name"]').val( $(log).val() );
+		 		clearInput( [ log ] );
+
+		 	})
+		 	.fail( function(err)  {
+		 		console.log( err )
+		 	})
+
+		} else {
+
+			$(htmlElement).append('<h2 class="text-warning text-center">"'
+				+res.statusText+'"</h2>');
+
+			setTimeout(function(){
+				window.location = '/';
+			},2000);
 		}
 
 	};
 
-	return button.click(function(event) {
-		event.preventDefault();
+	exports.checkResponse = checkResponse;
 
-		serverStorage.getUser({
+})(window);
 
-			login    : log.val(),
-			password : passw.val()
+
+$('button[data-name="openChat"]').click(function(event) {
+	event.preventDefault();
+
+	serverStorage.getUser({
+
+			login    : $('input[name="login"]').val(),
+			password : $('input[data-name="passsword"]').val()
 
 		}, checkResponse );
+});
 
-	});
 
-})();
+$('button[data-name="newUser"]').click(function(event) {
+	event.preventDefault();
 
-$('.openChat').click(function(event) {
-	var htmlElement = $('html');
+	serverStorage.createUser({
 
-	$.ajax({url:'/page/login', type:'get' })
-	.then(function(res){
+			login    : $('input[name="login"]').val(),
+			password : $('input[data-name="passsword"]').val()
 
-		htmlElement.html( res );
-	})
-	.fail(function(err){console.log(err)})
+		}, checkResponse );
 });

@@ -14,3 +14,16 @@ button[data-role="add message"]{
 	margin-left: 2%;
 	margin-top: 2%;
 }
+.list_message li{
+	margin-bottom: 0.5em;
+}
+.user_date{
+	display: block;
+}
+.user_name{
+	display: block;
+	font-weight: bold;
+}
+.message_content{
+	color: #402D2D;
+}

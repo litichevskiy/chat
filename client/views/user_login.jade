@@ -5,16 +5,20 @@ html
         meta(http-equiv="content-type", content="text/HTML;charset=UTF-9")
         link(rel="stylesheet", href='/blocks/block_auth/block_auth.css')
         link(rel="stylesheet", href="/css/bootstrap.min.css")
+        link(rel="stylesheet", href='/css/index.css')
 
         script(src="/js/jquery.min.js")
         script(src="/js/bootstrap.min.js")
+        script(src="/js/jade.min.js")
 
     body
         div(data-role='auth')
             form(role='form')
-                input.form-control.password(type='password' name='passsword' placeholder='passsword' autofocus)
+                input.form-control(data-name='passsword' type='password' name='passsword' placeholder='passsword' autofocus)
                 input.form-control(type='text' name='login' placeholder='login')
-                button.btn.btn-default.btn-lg.btn-block.authorized authorized
+                button(data-name='openChat').btn.btn-info.btn-lg.btn-block.authorized войти
+                button(data-name='newUser').btn.btn-warning.btn-lg.btn-block.authorized регистрация
 
+        script(src="/js/PubSub.js")
         script(src="/js/query_to_server.js")
         script(src="/blocks/block_auth/block_auth.js")

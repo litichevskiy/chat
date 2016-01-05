@@ -1,9 +1,9 @@
-form[role="form"]{
+/*form[role="form"]{
+}*/
+.form-group{
 	width: 96%;
 	margin-left: 2%;
 	margin-top: 1%;
-}
-.form-group{
 	margin-bottom: 0;
 }
 .btn.btn-success{

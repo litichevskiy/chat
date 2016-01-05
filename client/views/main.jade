@@ -12,7 +12,8 @@ html
         script(src="/js/jade.min.js")
     body
         div(data-role='auth')
-            button.btn.btn-default.btn-lg.btn-block.openChat OPEN CHAT
+            button(data-role='openChat').btn.btn-default.btn-lg.btn-block регистрация
+            button(data-role='authUser').btn.btn-default.btn-lg.btn-block вход
 
         script(src="/js/PubSub.js")
         script(src="/js/query_to_server.js")

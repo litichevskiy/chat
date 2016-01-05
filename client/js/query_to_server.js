@@ -20,16 +20,16 @@ var serverStorage = (function( PubSub ){
 			 	console.log( error ) })
 		},
 
-		createMessage : function( data, callback ) {
+		createMessage : function( data ) { // callback ???
 
 			$.post('/api/v1/message', {
 
 				content : data.content,
 				user    : data.user,
-				room    : data.user,
-				data    : new Date().toString().split('').slice(0, 21).join('')//////
+				room    : data.room,
+				time    : data.time
 			})
-			.then(function(res){ callback(res) })
+			// .then(function(res){ callback(res) })
 			.fail(function(error){ console.log( error ) })
 		},
 
@@ -75,17 +75,17 @@ var serverStorage = (function( PubSub ){
 
 		},
 
-		getMainPage : function ( htmlElement ) {
+		// getMainPage : function ( htmlElement ) {
 
-			$.ajax({url:'/page/chat', type:'get' })
-		 	.then( function(res){
+		// 	$.ajax({url:'/page/chat', type:'get' })
+		//  	.then( function(res){
 
-		 		htmlElement.html( res );
-		 	})
-		 	.fail( function(err)  {console.log( err )} )
-		},
+		//  		htmlElement.html( res );
+		//  	})
+		//  	.fail( function(err)  {console.log( err )} )
+		// },
 
-		on : pubsub.Subscribe.bind(pubsub)
+		on : pubsub.subscribe.bind(pubsub)
 	}
 
 })(PubSub);

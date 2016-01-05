@@ -22,12 +22,13 @@ html
                         button.btn.btn-warning(data-role='exit') Exit
                         button.btn.btn-info(data-role='add message') load message
                     .column(data-role='block_message')
-                        form(role='form')
-                            .form-group
-                                input(type='hidden' data-role='room')
-                                input(type='hidden' data-role='')
-                                textarea(class='form-control' rows='7' placeholder='MESSAGE TEXT' autofocus)
-                            button.btn.btn-success Send
+                        .form-group
+                            input(type='hidden' data-role='room')
+                            input(type='hidden' data-role='name')
+                            textarea(class='form-control' rows='5' placeholder='MESSAGE TEXT' autofocus )
+                        button.btn.btn-success(data-name='postMessage') Send
+
+        script(src="/js/PubSub.js")
         script(src="/js/query_to_server.js")
         script(src="/js/socket.js")
         script(src="/blocks/block_auth/block_auth.js")

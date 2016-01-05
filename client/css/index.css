@@ -25,13 +25,15 @@ div[data-role='block_message']{
 	height:35%;
 	overflow: auto;
 }
-.openChat{
-	height: 100%;
-	font-size: xx-large;
+button[data-role="openChat"],
+button[data-role="authUser"]{
+	height: 50%;
+	font-size: 200%;
 	outline: none;
 	background-color: azure;
 	color: grey;
 }
-.openChat:focus{
+button[data-role="openChat"],
+button[data-role="authUser"]:focus{
 	outline:none;
 }

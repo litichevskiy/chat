@@ -17,7 +17,7 @@ app.use(express.cookieParser());
 app.use(app.router);
 
 
-require('./routes')(app);
+// require('./routes')(app);
 
 
 app.set('views', __dirname + '/client/views/');
@@ -27,6 +27,24 @@ app.set('view engine', 'jade');
 app.use('/css', express.static( path.join(__dirname, '/client/css') ));
 app.use('/blocks', express.static( path.join(__dirname, '/client/blocks') ));
 app.use('/js', express.static( path.join(__dirname, '/client/js') ));
+app.use('/views', express.static( path.join(__dirname, '/client/views') ));
+
+
+app.get('/', function( req, res, next ){
+    res.render('user_login.jade')     //user_login.jade
+});
+app.get('/page/chat', function( req, res, next ){
+    res.render('chat.jade')
+});
+// app.get('/page/login', function( req, res, next ){
+//     res.render('user_login.jade')
+// });
+app.get('/template', function( req, res, next ){
+    res.render('messageTemplate.jade')
+});
+app.get('/views/renderSocket', function( req, res, next ){
+    res.render('renderSocket.jade')
+});
 
 
 app.post( '/login/create', auth.create, auth.login );
@@ -50,181 +68,31 @@ storage.createUser({
     password : '111'
 });
 storage.createMessage({
-    content : 'Отдача файла через pipe с обработкой ошибок и обрыва связи',
+    content : '1 Отдача файла через pipe с обработкой ошибок и обрыва связи',
     user    : 'john',
     room    : '111',
     data    : new Date().toString().split('').slice(0, 21).join('')
 });
 storage.createMessage({
-    content : 'Замена на встроенный метод pipe',
+    content : '2 Замена на встроенный метод pipe',
     user    : 'john',
     room    : '111',
     data    : new Date().toString().split('').slice(0, 21).join('')
 });
 storage.createMessage({
-    content : 'Отдача большого файла через read - drain - write',
+    content : '3 Отдача большого файла через read - drain - write',
     user    : 'john',
     room    : '111',
     data    : new Date().toString().split('').slice(0, 21).join('')
 });
 storage.createMessage({
-    content : 'Отдача большого файла без потоков',
+    content : '4 Отдача большого файла без потоков',
     user    : 'john',
     room    : '111',
     data    : new Date().toString().split('').slice(0, 21).join('')
 });
 storage.createMessage({
-    content : 'Тот же сервер с выводом памяти по setInterval',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача файла через pipe с обработкой ошибок и обрыва связи',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Замена на встроенный метод pipe',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла через read - drain - write',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла без потоков',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Тот же сервер с выводом памяти по setInterval',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача файла через pipe с обработкой ошибок и обрыва связи',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Замена на встроенный метод pipe',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла через read - drain - write',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла без потоков',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Тот же сервер с выводом памяти по setInterval',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача файла через pipe с обработкой ошибок и обрыва связи',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Замена на встроенный метод pipe',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла через read - drain - write',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла без потоков',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Тот же сервер с выводом памяти по setInterval',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача файла через pipe с обработкой ошибок и обрыва связи',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Замена на встроенный метод pipe',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла через read - drain - write',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла без потоков',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Тот же сервер с выводом памяти по setInterval',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача файла через pipe с обработкой ошибок и обрыва связи',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Замена на встроенный метод pipe',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла через read - drain - write',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Отдача большого файла без потоков',
-    user    : 'john',
-    room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
-});
-storage.createMessage({
-    content : 'Тот же сервер с выводом памяти по setInterval',
+    content : '5 Тот же сервер с выводом памяти по setInterval',
     user    : 'john',
     room    : '111',
     data    : new Date().toString().split('').slice(0, 21).join('')

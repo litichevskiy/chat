@@ -1,34 +1,67 @@
 (function(exports){
 
-	function BlockMessage ( o ) {
+	$.get('/views/messageTemplate.jade')
+	.then(function( template ){
+		BlockMessage.prototype.render = jade.compile( template )
+	})
+	.fail(function(err){console.log(err)})
+
+
+	function BlockMessage ( htmlElement ) {
 
 		var that = this;
 
 		this.container = $('<ul class="list-unstyled list_message"></ul>');
-		o.append(this.container);
+		htmlElement.append(this.container);
 	};
 
 
-	BlockMessage.prototype.update = function( list ) {
+	BlockMessage.prototype.addMessage = function( data ) {
 
-		var listMassage='';
+		var that = this,
+			listMassage = '',
+			html = $(that.container).html();
 
-		list.forEach(function( data ){
-			listMassage += '<li>"'+data.content+'"</li>'
+			listMassage += that.render({
+
+				id      : data.id,
+				name    : data.user,
+				content : data.content,
+				time    : data.time
+			});
+
+		that.container.html( html + listMassage );
+	};
+
+	BlockMessage.prototype.addMessages = function ( list ) {
+
+		var that = this,
+		listMassage = '',
+		html = $(this.container).html();
+
+		list.forEach(function(data){
+
+			listMassage += that.render({
+
+				id      : data.id,
+				name    : data.user,
+				content : data.content,
+				time    : data.time
+			})
 		});
 
-		this.container.html( listMassage );
-	}
+		that.container.html( html + listMassage );
+	};
 
-	BlockMessage.prototype.Get = function(){
-		serverStorage.getMessage({
+	// BlockMessage.prototype.getMessage = function(){
+	// 	serverStorage.getMessage({
 
-			quantity : '20',
-			room     : '111',
-			fromId   : ''
+	// 		quantity : '20',
+	// 		room     : '111',
+	// 		fromId   : ''
 
-		}, blockMessage.update.bind(this) )
-	}
+	// 	}, blockMessage.update.bind(this) )
+	// }
 
 	window.BlockMessage = BlockMessage;
 
