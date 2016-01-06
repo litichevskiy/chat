@@ -1,5 +1,7 @@
 (function(exports){
 
+	var parentBlockMessage = $('.column')[1];
+
 	$.get('/views/messageTemplate.jade')
 	.then(function( template ){
 		BlockMessage.prototype.render = jade.compile( template )
@@ -18,19 +20,19 @@
 
 	BlockMessage.prototype.addMessage = function( data ) {
 
-		var that = this,
-			listMassage = '',
-			html = $(that.container).html();
+		var that = this;
 
-			listMassage += that.render({
+			lastElemList = $(that.container).find('li:last')[0];
 
-				id      : data.id,
+			lastElemList.innerHTML += that.render({
+
+				id      : data.id || '',
 				name    : data.user,
 				content : data.content,
 				time    : data.time
 			});
 
-		that.container.html( html + listMassage );
+			scrollInBottom();
 	};
 
 	BlockMessage.prototype.addMessages = function ( list ) {
@@ -43,25 +45,20 @@
 
 			listMassage += that.render({
 
-				id      : data.id,
+				id      : data.id || '',
 				name    : data.user,
 				content : data.content,
 				time    : data.time
 			})
 		});
 
-		that.container.html( html + listMassage );
+		that.container.html( listMassage + html );
+		scrollInBottom();
 	};
 
-	// BlockMessage.prototype.getMessage = function(){
-	// 	serverStorage.getMessage({
-
-	// 		quantity : '20',
-	// 		room     : '111',
-	// 		fromId   : ''
-
-	// 	}, blockMessage.update.bind(this) )
-	// }
+	function scrollInBottom ( ) {
+		parentBlockMessage.scrollTop = parentBlockMessage.scrollHeight;
+	};
 
 	window.BlockMessage = BlockMessage;
 

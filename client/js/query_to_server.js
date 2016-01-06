@@ -1,4 +1,4 @@
-var serverStorage = (function( PubSub ){
+var mediatorServerApi = (function( PubSub ) {
 
 	var pubsub = new PubSub;
 
@@ -13,14 +13,17 @@ var serverStorage = (function( PubSub ){
 				fromId   : data.fromId
 			})
 			.then(function(res){
-
-				callback( res.listMassage ) })
+				debugger;
+				if ( res.status === 401 ) return window.location = '/page/login';
+					callback( res.listMassage )
+			})
 			.fail(function(error){
-
+				debugger;
+				if ( error.status === 401 ) return window.location = '/page/login';
 			 	console.log( error ) })
 		},
 
-		createMessage : function( data ) { // callback ???
+		createMessage : function( data ) {
 
 			$.post('/api/v1/message', {
 
@@ -29,8 +32,13 @@ var serverStorage = (function( PubSub ){
 				room    : data.room,
 				time    : data.time
 			})
-			// .then(function(res){ callback(res) })
-			.fail(function(error){ console.log( error ) })
+			.then(function(res){
+				debugger;
+				if ( res.status === 401 ) return window.location = '/page/login';
+			 })
+			.fail(function(error){
+				debugger;
+			 console.log( error ) })
 		},
 
 		createUser : function( user, callback ) {
@@ -66,24 +74,11 @@ var serverStorage = (function( PubSub ){
 				callback( error )})
 		},
 
-		clearCookie : function ( callback ) {
+		clearCookie : function (  ) {
 
 			 $.ajax({url:'/api/v1/clearCookie', type:'get'})
-
-			.then( function( res ) { callback( res ) } )
 			.fail(function(error){ console.log( error ) })
-
 		},
-
-		// getMainPage : function ( htmlElement ) {
-
-		// 	$.ajax({url:'/page/chat', type:'get' })
-		//  	.then( function(res){
-
-		//  		htmlElement.html( res );
-		//  	})
-		//  	.fail( function(err)  {console.log( err )} )
-		// },
 
 		on : pubsub.subscribe.bind(pubsub)
 	}

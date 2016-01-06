@@ -31,14 +31,14 @@ app.use('/views', express.static( path.join(__dirname, '/client/views') ));
 
 
 app.get('/', function( req, res, next ){
-    res.render('user_login.jade')     //user_login.jade
+    res.render('chat.jade')     //user_login.jade
 });
 app.get('/page/chat', function( req, res, next ){
     res.render('chat.jade')
 });
-// app.get('/page/login', function( req, res, next ){
-//     res.render('user_login.jade')
-// });
+app.get('/page/login', function( req, res, next ){
+    res.render('user_login.jade')
+});
 app.get('/template', function( req, res, next ){
     res.render('messageTemplate.jade')
 });
@@ -71,29 +71,59 @@ storage.createMessage({
     content : '1 Отдача файла через pipe с обработкой ошибок и обрыва связи',
     user    : 'john',
     room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
+    time    : new Date().toString().split('').slice(0, 21).join('')
 });
 storage.createMessage({
     content : '2 Замена на встроенный метод pipe',
     user    : 'john',
     room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
+    time    : new Date().toString().split('').slice(0, 21).join('')
 });
 storage.createMessage({
     content : '3 Отдача большого файла через read - drain - write',
     user    : 'john',
     room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
+    time    : new Date().toString().split('').slice(0, 21).join('')
 });
 storage.createMessage({
     content : '4 Отдача большого файла без потоков',
     user    : 'john',
     room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
+    time    : new Date().toString().split('').slice(0, 21).join('')
 });
 storage.createMessage({
     content : '5 Тот же сервер с выводом памяти по setInterval',
     user    : 'john',
     room    : '111',
-    data    : new Date().toString().split('').slice(0, 21).join('')
+    time    : new Date().toString().split('').slice(0, 21).join('')
+});
+storage.createMessage({
+    content : '6 Тот же сервер с выводом памяти по setInterval',
+    user    : 'john',
+    room    : '111',
+    time    : new Date().toString().split('').slice(0, 21).join('')
+});
+storage.createMessage({
+    content : '7 Тот же сервер с выводом памяти по setInterval',
+    user    : 'john',
+    room    : '111',
+    time    : new Date().toString().split('').slice(0, 21).join('')
+});
+storage.createMessage({
+    content : '8 Тот же сервер с выводом памяти по setInterval',
+    user    : 'john',
+    room    : '111',
+    time    : new Date().toString().split('').slice(0, 21).join('')
+});
+storage.createMessage({
+    content : '9 Тот же сервер с выводом памяти по setInterval',
+    user    : 'john',
+    room    : '111',
+    time    : new Date().toString().split('').slice(0, 21).join('')
+});
+storage.createMessage({
+    content : '10 Тот же сервер с выводом памяти по setInterval',
+    user    : 'john',
+    room    : '111',
+    time    : new Date().toString().split('').slice(0, 21).join('')
 });

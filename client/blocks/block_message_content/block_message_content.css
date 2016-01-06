@@ -18,6 +18,7 @@ button[data-role="add message"]{
 	margin-bottom: 0.5em;
 }
 .user_date{
+	font-size: small;
 	display: block;
 }
 .user_name{

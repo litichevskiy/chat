@@ -4,38 +4,45 @@
 
 	function getTime(){
 		return (new Date).toDateString();
-	}
+	};
+
 
 	var input = $('textarea'),
 		ROOM = 'room_1',
 		CONNECTION_INTERVAL = 500,
 		text,
-		main,
+		managerBlocks,
 		user = $('input[data-role="name');
 		data = {},
 		data.room = ROOM,
 		QUANTITY = 3,
 		$('input[data-role="room"]').val( ROOM );
 
-	function Main ( PubSub ) {
+	function ManagerBlocks ( PubSub ) {
 
 		PubSub.call(this);
 	};
 
-	Main.prototype = Object.create( PubSub.prototype );
+	ManagerBlocks.prototype = Object.create( PubSub.prototype );
 
-	main = new Main(PubSub);
+	managerBlocks = new ManagerBlocks(PubSub);
 
-	main.subscribe('addMessage', blockMessage.addMessage.bind(blockMessage) );
-	main.subscribe('createMessage', serverStorage.createMessage );
+	managerBlocks.subscribe('addMessage', function( data ) {
 
-	serverStorage.getMessage({
+		blockMessage.addMessage(data);
+		mediatorServerApi.createMessage(data);
+	});
+	managerBlocks.subscribe('newMessage',function( data ) {
+		blockMessage.addMessage(data);
+	});
+
+	mediatorServerApi.getMessage({
 
 			quantity : QUANTITY,
 			room     : ROOM,
-			fromId   : '2'
+			fromId   : 5
 
-		}, blockMessage.addMessages.bind( blockMessage ) )
+		}, blockMessage.addMessages.bind( blockMessage ) );
 
 	socket
 		.on('connect'   , function(){
@@ -46,12 +53,13 @@
 
 			setTimeout( reconnect, CONNECTION_INTERVAL )
 		})
-		.on('message'   , function( message ){
-			data.time = getTime();
-			data.content = message;
-			data.user = user.val();
-			debugger;
-			main.publish('addMessage', data );
+		.on('message'   , function( useData ) {
+
+			data.content = useData.text;
+			data.time 	 = getTime();
+			data.user    = useData.user;
+
+			managerBlocks.publish('newMessage', data );
 		})
 
 	function reconnect() {
@@ -63,19 +71,40 @@
 
 
 	$('button[data-name="postMessage"]').click(function(event) {
-		text = input.val();
 
-		socket.emit('message', text, function( message ){
+		data.time = getTime();
+		data.content = input.val();
+		data.user = user.val();
 
-			data.time = getTime();
-			data.content = message;
-			data.user = user.val();
+		socket.emit('message', {
 
-			main.publish('addMessage', data );
-			main.publish('createMessage', data );
-		});
+			text : input.val(),
+			user : user.val()
+		}, function( message ){
+
+				managerBlocks.publish('addMessage', data );
+
+			});
 
 		input.val('');
+	});
+
+	$('button[data-role="add message"]').click(function(event) {
+
+		mediatorServerApi.getMessage({
+
+			quantity : QUANTITY,
+			room     : ROOM,
+			fromId   : 5
+
+		}, blockMessage.addMessages.bind( blockMessage ) )
+
+	});
+
+	$('[data-role="exit"]').click(function(event) {
+
+		window.location = '/';
+		mediatorServerApi.clearCookie()
 	});
 
 })(PubSub);

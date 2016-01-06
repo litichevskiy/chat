@@ -22,18 +22,10 @@ module.exports = function( storage ) {
 					content : req.body.content,
 					room 	: req.body.room,
 					user 	: req.user,
-					data    : req.body.time
+					time    : req.body.time
 				})
 				.then( function( ) {
 					res.json({ result : 'success' })
-
-				// 	console.log({
-
-				// 	content : req.body.content,
-				// 	room 	: req.body.room,
-				// 	user 	: req.user,
-				// 	data    : req.body.data
-				// })
 				})
 				.fail(function(error){
 					console.log( error );
@@ -57,8 +49,6 @@ module.exports = function( storage ) {
 
 				storage.getMessages( room, quantity, fromId )
 				.then( function( list ) {
-					// console.log( res.json({ listMassage : list }) )
-
 					res.json({ listMassage : list })
 				})
 				.fail( function(){
