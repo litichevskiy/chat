@@ -38,7 +38,7 @@
 
             quantity : QUANTITY,
             room     : ROOM,
-            fromId   : ''
+            fromId   : undefined
 
         }, blockMessage.addMessages.bind( blockMessage ) );
 
@@ -102,7 +102,7 @@
 
             quantity : QUANTITY,
             room     : ROOM,
-            fromId   : ''
+            fromId   : undefined
 
         }, blockMessage.addMessages.bind( blockMessage ) )
     });

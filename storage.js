@@ -10,7 +10,10 @@ var storage = {
 		var defer = Q.defer(),
 			list;
 
+			quantity = Number( quantity );
+
 		if ( fromId !== undefined ){
+			fromId = Number( fromId );
 			list = bd_Messages.slice( fromId,  quantity + fromId );
 			defer.resolve( list );
 		} else{
