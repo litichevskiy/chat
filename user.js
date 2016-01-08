@@ -10,4 +10,10 @@ module.exports = function (storage) {
         room    : '',
         time    : new Date()
     });
+    storage.createMessage({
+        content : 'vdvvd',
+        user    : 'Bob',
+        room    : '',
+        time    : new Date()
+    });
 };
