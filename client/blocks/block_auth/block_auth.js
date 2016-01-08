@@ -1,9 +1,10 @@
 (function(exports) {
 
 	var log = $('input[name="login"]'),
-		button = $('button[data-name="openChat"]'),
+		passw = $('input[data-name="passsword"]'),
+		message_to_user = $('[data-role="info"]'),
 		OK = 'success',
-		htmlElement = $('body')[0];
+		TEXT_MESSAGE = 'НАС О ВАС НЕ ПРЕДУПРЕДИЛИ АВТОРИЗИРУЙТЕСЬ';
 
 	function clearInput( int ) {
 		$(int).each(function(index, el) {
@@ -11,30 +12,20 @@
 		});
 	};
 
-
 	function checkResponse( res ) {
 
 		if( res.result === OK ) {
 
-			$.ajax({url:'/page/chat', type:'get' })
-		 	.then( function(res){
-
-		 		$(htmlElement).html( res );
-				$('input[data-role="name"]').val( $(log).val() );
-		 		clearInput( [ log ] );
-		 	})
-		 	.fail( function(err)  {
-		 		console.log( err )
-		 	})
+		 	window.location = '/';
 
 		} else {
-			debugger;
-			$(htmlElement).append('<h2 class="text-warning text-center">"'
-				+res.statusText+'"</h2>');
+
+			$(message_to_user).html( TEXT_MESSAGE );
 
 			setTimeout(function(){
-				window.location = '/';
-			},2000);
+				clearInput([log,passw])
+				$(message_to_user).html('');
+			},3000);
 		}
 
 	};

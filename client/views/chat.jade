@@ -23,8 +23,7 @@ html
                         button.btn.btn-info(data-role='add message') load message
                     .column(data-role='block_message')
                         .form-group
-                            input(type='hidden' data-role='room')
-                            input(type='hidden' data-role='name')
+                            span.h2.text-danger.warning-message
                             textarea(class='form-control' rows='5' placeholder='MESSAGE TEXT' autofocus )
                         button.btn.btn-success(data-name='postMessage') Send
 
@@ -33,4 +32,6 @@ html
         script(src="/js/socket.js")
         script(src="/blocks/block_auth/block_auth.js")
         script(src="/blocks/block_message_content/block_message_content.js")
+        script.
+            var login = '#{login}';
         script(src='/js/main.js')

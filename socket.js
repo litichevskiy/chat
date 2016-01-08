@@ -7,7 +7,7 @@ module.exports = function(server){
 		// console.log(socket.handshake)
 	    socket.on('message', function (text, callback) {
 	        socket.broadcast.emit('message',text);
-	        callback(text); //text
+	        callback(text);
 	    });
 	});
 }

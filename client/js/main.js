@@ -1,110 +1,126 @@
-(function(PubSub){
+(function( PubSub ){
 
-	var blockMessage = new BlockMessage($('div[data-role="block_message_content"]'));
+    var blockMessage = new BlockMessage($('div[data-role="block_message_content"]'));
 
-	function getTime(){
-		return (new Date).toDateString();
-	};
+    var REGEXP_TIME = /.+?:\d\d\b/,
+        ROOM = 'room_1',
+        CONNECTION_INTERVAL = 500,
+        QUANTITY = 3,
+        MAX_LEHGTH_MESSAGE = 500,
+        USER = login,
+        input = $('textarea'),
+        text,
+        managerBlocks;
 
+    function getTime(){
+        return ( new Date().toString() ).match( REGEXP_TIME ).join();
+    };
 
-	var input = $('textarea'),
-		ROOM = 'room_1',
-		CONNECTION_INTERVAL = 500,
-		text,
-		managerBlocks,
-		user = $('input[data-role="name');
-		data = {},
-		data.room = ROOM,
-		QUANTITY = 3,
-		$('input[data-role="room"]').val( ROOM );
+    function ManagerBlocks ( PubSub ) {
 
-	function ManagerBlocks ( PubSub ) {
-
-		PubSub.call(this);
-	};
-
-	ManagerBlocks.prototype = Object.create( PubSub.prototype );
-
-	managerBlocks = new ManagerBlocks(PubSub);
-
-	managerBlocks.subscribe('addMessage', function( data ) {
-
-		blockMessage.addMessage(data);
-		mediatorServerApi.createMessage(data);
-	});
-	managerBlocks.subscribe('newMessage',function( data ) {
-		blockMessage.addMessage(data);
-	});
-
-	mediatorServerApi.getMessage({
-
-			quantity : QUANTITY,
-			room     : ROOM,
-			fromId   : 5
-
-		}, blockMessage.addMessages.bind( blockMessage ) );
-
-	socket
-		.on('connect'   , function(){
-			console.log('connect')})
-
-		.on('disconnect', function(){
-			console.log('disconnect');
-
-			setTimeout( reconnect, CONNECTION_INTERVAL )
-		})
-		.on('message'   , function( useData ) {
-
-			data.content = useData.text;
-			data.time 	 = getTime();
-			data.user    = useData.user;
-
-			managerBlocks.publish('newMessage', data );
-		})
-
-	function reconnect() {
-		socket.once('error', function(){
-			setTimeout( reconnect, CONNECTION_INTERVAL );
-		});
-		socket.socket.connect();
-	};
+        this.channel = new PubSub;
+    };
 
 
-	$('button[data-name="postMessage"]').click(function(event) {
+    managerBlocks = new ManagerBlocks(PubSub);
 
-		data.time = getTime();
-		data.content = input.val();
-		data.user = user.val();
+    managerBlocks.channel.subscribe('addMessage', function( data ) {
 
-		socket.emit('message', {
+        blockMessage.addMessage(data);
+        mediatorServerApi.createMessage(data);
+    });
+    managerBlocks.channel.subscribe('newMessage',function( data ) {
+        blockMessage.addMessage(data);
+    });
 
-			text : input.val(),
-			user : user.val()
-		}, function( message ){
+    setTimeout(function(){
+        mediatorServerApi.getMessage({
 
-				managerBlocks.publish('addMessage', data );
+            quantity : QUANTITY,
+            room     : ROOM,
+            fromId   : ''
 
-			});
+        }, blockMessage.addMessages.bind( blockMessage ) );
 
-		input.val('');
-	});
+    },300);
 
-	$('button[data-role="add message"]').click(function(event) {
+    socket
+        .on('connect', function(){
+            console.log('connect')
+        })
+        .on('disconnect', function(){
+            console.log('disconnect');
 
-		mediatorServerApi.getMessage({
+            setTimeout( reconnect, CONNECTION_INTERVAL )
+        })
+        .on('message', function( useData ) {
 
-			quantity : QUANTITY,
-			room     : ROOM,
-			fromId   : 5
+            managerBlocks.channel.publish('newMessage', {
 
-		}, blockMessage.addMessages.bind( blockMessage ) )
+                content : useData.text,
+                time    : getTime(),
+                user    : useData.user,
+                room    : ROOM
+            });
+        })
 
-	});
+    function reconnect() {
+        socket.once('error', function(){
+            setTimeout( reconnect, CONNECTION_INTERVAL );
+        });
+        socket.socket.connect();
+    };
 
-	$('[data-role="exit"]').click(function(event) {
 
-		window.location = '/';
-		mediatorServerApi.clearCookie()
-	});
+    $('button[data-name="postMessage"]').click(function(event) {
+
+        if ( ( input.val() ).length > MAX_LEHGTH_MESSAGE ) {
+
+            return errorLengthMessage( MAX_LEHGTH_MESSAGE );
+        };
+
+        socket.emit('message', {
+
+            text : input.val(),
+            user : USER
+        }, function( message ){
+
+                managerBlocks.channel.publish('addMessage', {
+                    content : message.text,
+                    time    : getTime(),
+                    user    : message.user,
+                    room    : ROOM
+                });
+            });
+
+        input.val('');
+    });
+
+    $('button[data-role="add message"]').click(function(event) {
+
+        mediatorServerApi.getMessage({
+
+            quantity : QUANTITY,
+            room     : ROOM,
+            fromId   : ''
+
+        }, blockMessage.addMessages.bind( blockMessage ) )
+    });
+
+    $('[data-role="exit"]').click(function(event) {
+
+        window.location = '/login';
+        mediatorServerApi.clearCookie()
+    });
+
+    function errorLengthMessage ( text ) {
+        var message = $('.warning-message').html(
+
+                'WARNING: max length message ' + text + ' simbol'
+            );
+            setTimeout(function(){
+                $(message).html('');
+            }, 3000)
+    }
 
 })(PubSub);

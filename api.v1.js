@@ -1,5 +1,7 @@
 module.exports = function( storage ) {
 
+	var MAX_LEHGTH_MESSAGE = 500;
+
 	return {
 
 		createMessage : function( req, res, next ) {
@@ -8,30 +10,38 @@ module.exports = function( storage ) {
 				room = req.body.room,
 				user = req.user;
 
-			if ( !content || !room || !user ){
-				res.status( 400 )
+			if ( !content || !room || !user ) {
+				res.status( 400 );
 				res.json({
 					result : 'failed',
 					error  : 'content, room, user are required'
-				})
+				});
 
 			} else {
 
-				storage.createMessage({
+				if ( req.body.content.length <= MAX_LEHGTH_MESSAGE ){
 
-					content : req.body.content,
-					room 	: req.body.room,
-					user 	: req.user,
-					time    : req.body.time
-				})
-				.then( function( ) {
-					res.json({ result : 'success' })
-				})
-				.fail(function(error){
-					console.log( error );
-					res.status( 500 )
-					res.json({ result : 'failed' })
-				})
+					storage.createMessage({
+
+						content : req.body.content,
+						room 	: req.body.room,
+						user 	: req.user,
+						time    : req.body.time
+					})
+					.then( function( ) {
+						res.json({ result : 'success' });
+					})
+					.fail(function(error){
+						console.log( error );
+						res.status( 500 );
+						res.json({ result : 'server error' });
+					})
+
+				} else {
+
+					res.status( 406 );
+					res.json({ result : 'maximum ' + MAX_LEHGTH_MESSAGE + ' simbol' });
+				}
 			}
 		},
 
@@ -42,29 +52,28 @@ module.exports = function( storage ) {
 				fromId = req.query.fromId;
 
 			if ( !room ||  !quantity ){
-				res.status( 500 );
-				res.json({ result : 'failed' });
+				res.status( 400 );
+				res.json({ result : 'room and quantity are required' });
 
 			} else {
 
 				storage.getMessages( room, quantity, fromId )
 				.then( function( list ) {
-					res.json({ listMassage : list })
+					res.status( 200 );
+					res.json({ listMassage : list });
 				})
 				.fail( function(){
 					res.status( 500 );
-					res.json({ result : 'failed' });
+					res.json({ result : 'server error' });
 				})
-
 			}
-
 		},
 
 		clear : function( req, res, next ) {
 			res.clearCookie( 'login',
-				{ Path : '/' ,expires : new Date(Date.now() )} )
-
-			res.json({'res':res._headers})
+				{ Path : '/' ,expires : new Date(Date.now() )} );
+			res.status( 200 );
+			res.json({result:'OK'});
 
 		}
 	}
