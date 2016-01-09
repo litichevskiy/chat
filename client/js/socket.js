@@ -8,6 +8,6 @@
 
   	});
 
-  	window.socket = socket;
+  	exports.socket = socket;
 
 })(window);

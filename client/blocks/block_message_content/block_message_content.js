@@ -1,12 +1,21 @@
 (function(exports){
 
-	var parentBlockMessage = $('.column')[1];
+	var parentBlockMessage = $('.column')[1],
+		render;
 
-	$.get('/views/messageTemplate.jade')
-	.then(function( template ){
-		BlockMessage.prototype.render = jade.compile( template )
-	})
-	.fail(function(err){console.log(err)})
+	function init () {
+		var defer = $.Deferred();
+
+		$.get('/views/messageTemplate.jade')
+		.then(function( template ){
+			render = jade.compile( template )
+			defer.resolve();
+		})
+		.fail(function(err){
+			console.log(err)
+		})
+		return defer.promise();
+	};
 
 
 	function BlockMessage ( htmlElement ) {
@@ -14,17 +23,20 @@
 		var that = this;
 
 		this.container = $('<ul class="list-unstyled list_message"></ul>');
-		htmlElement.append(this.container);
+		$(htmlElement).append(this.container);
+		this.render;
 	};
 
 
 	BlockMessage.prototype.addMessage = function( data ) {
 
-		var that = this;
+		var that = this,
+			newHtml = '';
 
-			lastElemList = $(that.container).find('li:last')[0];
+			lastElemList = $(that.container).find('li:last')[0] || $(that.container);
+			html = $(lastElemList).html();
 
-			lastElemList.innerHTML += that.render({
+			newHtml = render({
 
 				id      : data.id || '',
 				name    : data.user,
@@ -32,6 +44,7 @@
 				time    : data.time
 			});
 
+			$(lastElemList).html( html + newHtml )
 			scrollInBottom();
 	};
 
@@ -43,7 +56,7 @@
 
 		list.forEach(function(data){
 
-			listMassage += that.render({
+			listMassage += render({
 
 				id      : data.id || '',
 				name    : data.user,
@@ -52,7 +65,7 @@
 			})
 		});
 
-		that.container.html( listMassage + html );
+		$(that.container).html( listMassage + html );
 		scrollInBottom();
 	};
 
@@ -60,6 +73,7 @@
 		parentBlockMessage.scrollTop = parentBlockMessage.scrollHeight;
 	};
 
-	window.BlockMessage = BlockMessage;
+	exports.BlockMessage = BlockMessage;
+	exports.init = init;
 
 })(window);

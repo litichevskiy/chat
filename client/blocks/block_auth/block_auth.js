@@ -4,12 +4,21 @@
 		passw = $('input[data-name="passsword"]'),
 		message_to_user = $('[data-role="info"]'),
 		OK = 'success',
-		TEXT_MESSAGE = 'НАС О ВАС НЕ ПРЕДУПРЕДИЛИ АВТОРИЗИРУЙТЕСЬ';
+		TEXT_MESSAGE = 'НАС О ВАС НЕ ПРЕДУПРЕДИЛИ АВТОРИЗИРУЙТЕСЬ',
+		USER_ALREADY_EXISTS = 'user already exists',
+		USER_EXISTS = 403;
 
 	function clearInput( int ) {
 		$(int).each(function(index, el) {
 			el.val('')
 		});
+	};
+
+	function clear() {
+		setTimeout(function(){
+			clearInput([log,passw])
+			$(message_to_user).html('');
+		},3000);
 	};
 
 	function checkResponse( res ) {
@@ -20,14 +29,17 @@
 
 		} else {
 
-			$(message_to_user).html( TEXT_MESSAGE );
+			if ( res.status === USER_EXISTS ) {
 
-			setTimeout(function(){
-				clearInput([log,passw])
-				$(message_to_user).html('');
-			},3000);
+				$(message_to_user).html( USER_ALREADY_EXISTS );
+				clear();
+
+			} else {
+
+				$(message_to_user).html( TEXT_MESSAGE );
+				clear();
+			}
 		}
-
 	};
 
 	exports.checkResponse = checkResponse;

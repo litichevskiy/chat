@@ -1,22 +1,21 @@
-/*form[role="form"]{
-}*/
 .form-group{
+    position:relative;
+    height:inherit;
 	width: 96%;
 	margin-left: 2%;
 	margin-top: 1%;
 	margin-bottom: 0;
 }
-.btn.btn-success{
+button[data-name="postMessage"]{
 	outline: none;
-	margin:1%;
+	margin: 1%;
 }
 textarea::-webkit-input-placeholder{
 	font-size: 1.5em;
 	padding: 1%;
 }
-.form-control{
+textarea[data-role="message"]{
 	font-size: 1.5em;
-}
-.list_message{
-
+    width: 98%;
+    height:200%;
 }

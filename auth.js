@@ -24,6 +24,15 @@ module.exports = function ( storage ) {
 			}
 		},
 
+		extendСookies : function ( req, res, next ) {
+
+			res.cookie('login', req.body.user, {
+      			expires: new Date(Date.now() + COOKIE_EXPIRIES ),
+        		Path : '/'
+    		});
+    		next();
+		},
+
 		login : function ( req, res, next ) {
 
 			var login = req.body.login,
@@ -77,8 +86,8 @@ module.exports = function ( storage ) {
 					next();
 				})
 				.fail(function(error){
-					res.status( 500 );
-					res.json({result: 'server error'})
+					res.status( 403 );
+					res.json({result: 'user already exists'})
 				})
 
 			} else {

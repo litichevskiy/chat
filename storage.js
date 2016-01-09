@@ -2,7 +2,9 @@
 
 var Q = require('q'),
 	bd_Users = {},
-	bd_Messages = [];
+	bd_Messages = [],
+	LAST_MESSAGE = 0,
+	MESSAGE = 'больше сообщений нет';
 
 var storage = {
 
@@ -14,9 +16,20 @@ var storage = {
 
 		if ( fromId !== undefined ){
 			fromId = Number( fromId );
-			list = bd_Messages.slice( fromId,  quantity + fromId );
-			defer.resolve( list );
+
+			if( fromId === LAST_MESSAGE ) {
+
+				list = bd_Messages.slice( fromId, quantity );
+				list.unshift( {content:MESSAGE} )
+				defer.resolve( list );
+			} else{
+
+				list = bd_Messages.slice( fromId,  quantity + fromId );
+				defer.resolve( list );
+			}
+
 		} else{
+
 			list = bd_Messages.slice( bd_Messages.length - quantity );
 			defer.resolve( list );
 		}

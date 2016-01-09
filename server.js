@@ -39,10 +39,10 @@ app.get('/template', function( req, res, next ){
 
 
 app.post( '/login/create', auth.create, auth.login );
-app.post( '/login', auth.login);
-app.get(  '/api/*', auth.check);
-app.post( '/api/*', auth.check);
-app.get(  '/api/v1/messages', apiv1.getMessages );
+app.post( '/login', auth.login );
+app.get(  '/api/*', auth.check );
+app.post( '/api/*', auth.check, auth.extendСookies );
+app.get(  '/api/v1/messages', apiv1.getMessages, auth.extendСookies  );
 app.post( '/api/v1/message', apiv1.createMessage );
 app.get(  '/api/v1/clearCookie', apiv1.clear );
 

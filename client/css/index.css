@@ -22,6 +22,7 @@ div[data-role='block_message_content']{
 	overflow: auto;
 }
 div[data-role='block_message']{
+	position:relative;
 	height:35%;
 	overflow: auto;
 }

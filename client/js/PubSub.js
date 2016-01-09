@@ -8,7 +8,7 @@
 		if ( !this.storage.hasOwnProperty( eventName ) ){
 			this.storage[eventName] = [];
 		}
-			this.storage[eventName].push( func );
+		this.storage[eventName].push( func );
 	};
 
 	PubSub.prototype.publish = function( eventName, data ){
@@ -27,5 +27,6 @@
 		};
 	};
 
-	window.PubSub = PubSub;
+	exports.PubSub = PubSub;
+
 })(window);

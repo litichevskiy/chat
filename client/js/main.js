@@ -1,16 +1,35 @@
-(function( PubSub ){
-
-    var blockMessage = new BlockMessage($('div[data-role="block_message_content"]'));
+(function( PubSub, init, mediatorServerApi ){
 
     var REGEXP_TIME = /.+?:\d\d\b/,
         ROOM = 'room_1',
         CONNECTION_INTERVAL = 500,
-        QUANTITY = 3,
+        QUANTITY = 5,
         MAX_LEHGTH_MESSAGE = 500,
         USER = login,
         input = $('textarea'),
         text,
-        managerBlocks;
+        managerBlocks,
+        resCheck;
+
+
+    var blockMessage = new BlockMessage($('div[data-role="block_message_content"]')[0]);
+
+    $.when( init() )
+    .then(function(){
+
+        mediatorServerApi.getMessage({
+
+            quantity : QUANTITY,
+            room     : ROOM,
+            fromId   : undefined
+
+        }, blockMessage.addMessages.bind(blockMessage) );
+    })
+    .fail(function(err){
+        console.log( err );
+    })
+
+
 
     function getTime(){
         return ( new Date().toString() ).match( REGEXP_TIME ).join();
@@ -33,16 +52,6 @@
         blockMessage.addMessage(data);
     });
 
-    setTimeout(function(){
-        mediatorServerApi.getMessage({
-
-            quantity : QUANTITY,
-            room     : ROOM,
-            fromId   : undefined
-
-        }, blockMessage.addMessages.bind( blockMessage ) );
-
-    },300);
 
     socket
         .on('connect', function(){
@@ -94,17 +103,24 @@
             });
 
         input.val('');
+        input.focus();
     });
 
     $('button[data-role="add message"]').click(function(event) {
 
+        var fromId = Number( $('li[data-id_message]:first')[0]
+            .dataset.id_message ) -QUANTITY;
+
+        resCheck = checkFromId( fromId, QUANTITY  );
+
         mediatorServerApi.getMessage({
 
-            quantity : QUANTITY,
+            quantity : resCheck.quantity,
             room     : ROOM,
-            fromId   : undefined
+            fromId   : resCheck.fromId
 
         }, blockMessage.addMessages.bind( blockMessage ) )
+
     });
 
     $('[data-role="exit"]').click(function(event) {
@@ -121,6 +137,27 @@
             setTimeout(function(){
                 $(message).html('');
             }, 3000)
-    }
+    };
 
-})(PubSub);
+    function checkFromId( fromId, QUANTITY ) {
+
+        if ( fromId <= 0 ) {
+
+            $('button[data-role="add message"]').hide();
+            QUANTITY = Number( $('li[data-id_message]:first')[0]
+                .dataset.id_message
+            ) -1;
+            fromId = 0;
+
+            return {
+                fromId : fromId,
+                quantity : QUANTITY
+            };
+        }
+        return {
+                fromId : fromId,
+                quantity : QUANTITY
+            };
+    };
+
+})(PubSub, init, mediatorServerApi);
