@@ -3,11 +3,6 @@ button[data-role="exit"]{
 	top: 0.5em;
 	right: 2%;
 }
-button[data-role="add message"]{
-	position:absolute;
-	top: 0.5em;
-	right: 8%;
-}
 .list-unstyled.list_message{
 	font-size: 1.5em;
 	width: 94%;

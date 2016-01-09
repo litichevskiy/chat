@@ -21,7 +21,7 @@ var mediatorServerApi = (function( PubSub ) {
 					callback( res.listMassage )
 			})
 			.fail(function(error){
-					debugger;
+
 				if (res.status === 401) return window.location = '/'
 			 	console.log( error )
 			});

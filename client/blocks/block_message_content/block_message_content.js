@@ -3,16 +3,18 @@
 	var parentBlockMessage = $('.column')[1],
 		render;
 
-	function init () {
+	function BlockMessageInit () {
 		var defer = $.Deferred();
 
 		$.get('/views/messageTemplate.jade')
 		.then(function( template ){
+
 			render = jade.compile( template )
-			defer.resolve();
+			defer.resolve( BlockMessage );
+			delete window.BlockMessageInit;
 		})
 		.fail(function(err){
-			console.log(err)
+			defer.reject( err )
 		})
 		return defer.promise();
 	};
@@ -24,7 +26,6 @@
 
 		this.container = $('<ul class="list-unstyled list_message"></ul>');
 		$(htmlElement).append(this.container);
-		this.render;
 	};
 
 
@@ -73,7 +74,6 @@
 		parentBlockMessage.scrollTop = parentBlockMessage.scrollHeight;
 	};
 
-	exports.BlockMessage = BlockMessage;
-	exports.init = init;
+	exports.BlockMessageInit = BlockMessageInit;
 
 })(window);
