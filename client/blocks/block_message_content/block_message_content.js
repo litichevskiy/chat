@@ -1,17 +1,22 @@
-(function(exports){
+(function( exports, mediatorServerApi ) {
 
-	var parentBlockMessage = $('.column')[1],
-		render;
+	var parentBlockMessageContent = $('.column')[1],
+		render,
+		resCheck,
+		CHECK_FUNCTION = true;
 
-	function BlockMessageInit () {
+	var __THAT;
+
+
+	function BlockMessageContentInit ( _CONSTANT ) {
 		var defer = $.Deferred();
 
 		$.get('/views/messageTemplate.jade')
 		.then(function( template ){
 
 			render = jade.compile( template )
-			defer.resolve( BlockMessage );
-			delete window.BlockMessageInit;
+			defer.resolve( BlockMessageContent );
+			delete window.BlockMessageContentInit;
 		})
 		.fail(function(err){
 			defer.reject( err )
@@ -20,18 +25,20 @@
 	};
 
 
-	function BlockMessage ( htmlElement ) {
+	function BlockMessageContent ( htmlElement, pubsub ) {
 
-		var that = this;
+		__THAT = this;
 
 		this.container = $('<ul class="list-unstyled list_message"></ul>');
 		$(htmlElement).append(this.container);
+
+		this.pubsub = pubsub;
 	};
 
 
-	BlockMessage.prototype.addMessage = function( data ) {
+	BlockMessageContent.prototype.addMessage = function( data ) {
 
-		var that = this,
+		var that = ( this === window ) ? __THAT : this,
 			newHtml = '';
 
 			lastElemList = $(that.container).find('li:last')[0] || $(that.container);
@@ -49,11 +56,11 @@
 			scrollInBottom();
 	};
 
-	BlockMessage.prototype.addMessages = function ( list ) {
+	BlockMessageContent.prototype.addMessages = function ( list ) {
 
-		var that = this,
-		listMassage = '',
-		html = $(this.container).html();
+		var that = ( this === window ) ? __THAT : this,
+			listMassage = '',
+			html = $(that.container).html();
 
 		list.forEach(function(data){
 
@@ -71,9 +78,57 @@
 	};
 
 	function scrollInBottom ( ) {
-		parentBlockMessage.scrollTop = parentBlockMessage.scrollHeight;
+		parentBlockMessageContent.scrollTop = parentBlockMessageContent.scrollHeight;
 	};
 
-	exports.BlockMessageInit = BlockMessageInit;
+	function loadHistoryMessage ( ) {
 
-})(window);
+            var fromId = Number( $('li[data-id_message]:first')[0]
+                .dataset.id_message ) -_CONSTANT.QUANTITY;
+
+            resCheck = checkFromId( fromId, _CONSTANT.QUANTITY  );
+
+            mediatorServerApi.getMessage({
+
+                quantity : resCheck.quantity,
+                room     : _CONSTANT.ROOM,
+                fromId   : resCheck.fromId
+
+            }, __THAT.addMessages );
+        };
+
+        function checkFromId( fromId, QUANTITY ) {
+
+            if ( fromId <= 0 ) {
+            	debugger;
+            	CHECK_FUNCTION = false;
+
+                _CONSTANT.QUANTITY = Number( $('li[data-id_message]:first')[0]
+                    .dataset.id_message
+                ) -1;
+                fromId = 0;
+
+                return {
+                    fromId : fromId,
+                    quantity : QUANTITY
+                };
+            }
+            return {
+                    fromId : fromId,
+                    quantity : _CONSTANT.QUANTITY
+                };
+        };
+
+
+        $('div[data-role="block_message_content"]').scroll(function(){
+
+            if (this.scrollTop === 0 && CHECK_FUNCTION ) {
+            	debugger;
+                return loadHistoryMessage();
+            }
+        });
+
+
+	exports.BlockMessageContentInit = BlockMessageContentInit;
+
+})( window, mediatorServerApi );

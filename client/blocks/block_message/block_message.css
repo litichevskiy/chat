@@ -20,4 +20,5 @@ textarea[data-role="message"]{
 	font-size: 1.5em;
     width: 98%;
     height:200%;
+    cursor: text;
 }
