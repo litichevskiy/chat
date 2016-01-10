@@ -99,61 +99,60 @@
 
 	function loadHistoryMessage ( ) {
 
-            var fromId = Number( $('li[data-id_message]:first')[0]
-                .dataset.id_message ) - QUANTITY;
+        var fromId = Number( $('li[data-id_message]:first')[0]
+            .dataset.id_message ) - QUANTITY;
 
             resCheck = checkFromId( fromId, QUANTITY  );
 
-            $.when(
+        $.when(
 
-            	serverAPI.getMessage({
+            serverAPI.getMessage({
 
-                	quantity : resCheck.quantity,
-                	room     : ROOM,
-                	fromId   : resCheck.fromId
+                quantity : resCheck.quantity,
+                room     : ROOM,
+                fromId   : resCheck.fromId
 
-            	})
-            )
-            .then(function(res){
-            	theBlock.addMessages( res );
             })
-            .fail(function(err){
-            	console.log(err)
-            });
-        };
+        )
+        .then(function(res){
+            theBlock.addMessages( res );
+        })
+        .fail(function(err){
+            console.log(err)
+        })
+    };
 
-        function checkFromId( fromId, QUANTITY ) {
+    function checkFromId( fromId, QUANTITY ) {
 
-            if ( fromId <= 0 ) {
+        if ( fromId <= 0 ) {
 
-            	CHECK_FUNCTION = false;
+            CHECK_FUNCTION = false;
 
-                QUANTITY = Number( $('li[data-id_message]:first')[0]
-                    .dataset.id_message
-                ) -1;
-                fromId = 0;
+            QUANTITY = Number( $('li[data-id_message]:first')[0]
+            .dataset.id_message) -1;
+            fromId = 0;
 
-                return {
-                    fromId   : fromId,
-                    quantity : QUANTITY
-                };
-            }
             return {
-                    fromId   : fromId,
-                    quantity : QUANTITY
-                };
-        };
+                fromId   : fromId,
+                quantity : QUANTITY
+            };
+        }
+            return {
+                fromId   : fromId,
+                quantity : QUANTITY
+            };
+    };
 
 
-        $('div[data-role="block_message_content"]').scroll(function(){
+    $('div[data-role="block_message_content"]').scroll(function(){
 
-            if (this.scrollTop === 0 && CHECK_FUNCTION ) {
+        if (this.scrollTop === 0 && CHECK_FUNCTION ) {
 
-                loadHistoryMessage();
-                $(inProgress).show();
-                chechInProgress = true;
-            }
-        });
+            loadHistoryMessage();
+            $(inProgress).show();
+            chechInProgress = true;
+        }
+    });
 
 
 	exports.BlockMessageContentInit = BlockMessageContentInit;
