@@ -1,7 +1,7 @@
 (function( PubSub, BlockMessageContentInit, serverAPI, socketInit, blockMessagePostInit ){
 
     var USER     = login,
-        QUANTITY = 5,
+        QUANTITY = 20,
         ROOM     = 'room_1',
         pubsub   = new PubSub;
 
