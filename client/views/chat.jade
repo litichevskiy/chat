@@ -5,7 +5,7 @@ html
         meta(http-equiv="content-type", content="text/HTML;charset=UTF-9")
         link(rel="stylesheet", href="/css/bootstrap.min.css")
         link(rel="stylesheet", href='/css/index.css')
-        link(rel="stylesheet", href='/blocks/block_message/block_message.css')
+        link(rel="stylesheet", href='/blocks/block_messagePost/block_message.css')
         link(rel="stylesheet", href='/blocks/block_message_content/block_message_content.css')
 
         script(src="/js/jquery.min.js")
@@ -19,6 +19,7 @@ html
                     .column(data-role='block_users')
                 .col-md-9.col-sm-9.col-lg-9.col-xs-9
                     .column(data-role='block_message_content')
+                        div(data-role='load').text-center.text-primary load ...
                         button.btn.btn-warning(data-role='exit') Exit
                     .column(data-role='block_message')
                         .form-group
@@ -27,11 +28,11 @@ html
                             button.btn.btn-info(data-name='postMessage') Post
 
         script(src="/js/PubSub.js")
-        script(src="/js/query_to_server.js")
+        script(src="/js/serverAPI.js")
         script(src="/js/socket.js")
         script(src="/blocks/block_auth/block_auth.js")
         script(src="/blocks/block_message_content/block_message_content.js")
-        script(src="/blocks/block_message/block_messagePost.js")
+        script(src="/blocks/block_messagePost/block_messagePost.js")
         script.
             var login = '#{login}';
         script(src='/js/main.js')

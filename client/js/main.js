@@ -1,18 +1,14 @@
-var _CONSTANT = {
+(function( PubSub, BlockMessageContentInit, serverAPI, socketInit, blockMessagePostInit ){
 
-    ROOM     : 'room_1',
-    QUANTITY : 5
-};
+    var USER     = login,
+        QUANTITY = 5,
+        ROOM     = 'room_1',
+        pubsub   = new PubSub;
 
-(function( PubSub, BlockMessageContentInit, mediatorServerApi, socketInit,blockMessagePostInit,  _CONSTANT ){
-
-    var USER = login,
-        KEYDOWN_ENTER = 13,
-        pubsub = new PubSub;
 
     $.when(
 
-        BlockMessageContentInit( _CONSTANT ),
+        BlockMessageContentInit( QUANTITY, ROOM ),
         socketInit({ pubsub : pubsub, io : io })
     )
     .then(function( BlockMessage, socket ){
@@ -20,7 +16,7 @@ var _CONSTANT = {
         blockMessagePostInit(
             pubsub,
             $('[data-role="block_message"]')[0],
-            socket, _CONSTANT, USER
+            socket, ROOM, USER
         )
 
         var BlockMessageContent = new BlockMessage(
@@ -28,12 +24,22 @@ var _CONSTANT = {
                 pubsub
             );
 
-        mediatorServerApi.getMessage({
-            quantity : _CONSTANT.QUANTITY,
-            room     : _CONSTANT.ROOM,
-            fromId   : undefined
+        $.when(
 
-        }, BlockMessageContent.addMessages.bind(BlockMessageContent) );
+            serverAPI.getMessage({
+                quantity : QUANTITY,
+                room     : ROOM,
+                fromId   : undefined
+
+            })
+        )
+        .then(function( res ){
+            debugger;
+            BlockMessageContent.addMessages.call( BlockMessageContent, res );
+        })
+        .fail(function(err){
+            console.log( err );
+        })
 
 
         BlockMessageContent.pubsub.subscribe('addMessage',
@@ -44,14 +50,14 @@ var _CONSTANT = {
         );
 
         pubsub.subscribe('addMessage', function( data ) {
-            mediatorServerApi.createMessage(data);
+            serverAPI.createMessage(data);
         });
 
 
         $('[data-role="exit"]').click(function(event) {
 
             window.location = '/login';
-            mediatorServerApi.clearCookie()
+            serverAPI.clearCookie()
         });
 
     })
@@ -59,4 +65,4 @@ var _CONSTANT = {
         console.log( err );
     })
 
-})( PubSub, BlockMessageContentInit, mediatorServerApi, socketInit, blockMessagePostInit, _CONSTANT );
+})( PubSub, BlockMessageContentInit, serverAPI, socketInit, blockMessagePostInit );

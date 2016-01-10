@@ -50,22 +50,40 @@
 $('button[data-name="openChat"]').click(function(event) {
 	event.preventDefault();
 
-	mediatorServerApi.getUser({
+	$.when(
+
+		serverAPI.getUser({
 
 			login    : $('input[name="login"]').val(),
 			password : $('input[data-name="passsword"]').val()
 
-		}, checkResponse );
+		})
+	)
+	.then(function(res){
+		checkResponse( res );
+	})
+	.fail(function(err){
+		console.log(err);
+	});
 });
 
 
 $('button[data-name="newUser"]').click(function(event) {
 	event.preventDefault();
 
-	mediatorServerApi.createUser({
+	$.when(
+
+		serverAPI.createUser({
 
 			login    : $('input[name="login"]').val(),
 			password : $('input[data-name="passsword"]').val()
 
-		}, checkResponse );
+		})
+	)
+	.then(function(res){
+		checkResponse( res );
+	})
+	.fail(function(err){
+		console.log(err);
+	});
 });

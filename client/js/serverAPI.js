@@ -1,10 +1,10 @@
-var mediatorServerApi = (function( PubSub ) {
-
-	var pubsub = new PubSub;
+var serverAPI = (function( PubSub ) {
 
 	return {
 
-		getMessage : function( data, callback ) {
+		getMessage : function( data ) {
+
+			var defer = $.Deferred();
 
 			$.ajax({
 				url: '/api/v1/messages',
@@ -17,17 +17,22 @@ var mediatorServerApi = (function( PubSub ) {
 				},
 			})
 			.then(function(res){
-				if ( res.status === 400 ) return console.log( res );
-					callback( res.listMassage )
+
+				if ( res.status === 400 ) console.log( res );
+				defer.resolve( res.listMassage );
 			})
 			.fail(function(error){
 
-				if (res.status === 401) return window.location = '/'
-			 	console.log( error )
+				if (res.status === 401) window.location = '/'
+				defer.reject( error );
 			});
+
+			return defer.promise();
 		},
 
 		createMessage : function( data ) {
+
+			var defer = $.Deferred();
 
 			$.ajax({
 				url: '/api/v1/message',
@@ -41,14 +46,19 @@ var mediatorServerApi = (function( PubSub ) {
 				},
 			})
 			.then(function(res){
-				if ( res.status === 400 ) return console.log( res );
-			 })
-			.fail(function(error){
-			 console.log( error )
+				if ( res.status === 400 ) console.log( res );
+				defer.resolve( res.listMassage );
 			})
+			.fail(function(error){
+				defer.reject( error );
+			});
+
+			return defer.promise();
 		},
 
-		createUser : function( user, callback ) {
+		createUser : function( user ) {
+
+			var defer = $.Deferred();
 
 			$.ajax({
 				url: '/login/create',
@@ -60,15 +70,18 @@ var mediatorServerApi = (function( PubSub ) {
 				},
 			})
 			.then( function( res ) {
-				callback( res )
+				defer.resolve( res );
 			})
 			.fail(function(error){
-				console.log( error )
-				callback(error)
-			})
+				defer.reject(error);
+			});
+
+			return defer.promise();
 		},
 
-		getUser : function ( user, callback ) {
+		getUser : function ( user ) {
+
+			var defer = $.Deferred();
 
 			$.ajax({
 				url: '/login',
@@ -80,14 +93,18 @@ var mediatorServerApi = (function( PubSub ) {
 				},
 			})
 			.then(function(res){
-				callback( res )
+				defer.resolve( res )
 			})
 			.fail(function(error){
-				callback( error )
-			})
+				defer.reject(error);
+			});
+
+			return defer.promise;
 		},
 
 		clearCookie : function (  ) {
+
+			var defer = $.Deferred();
 
 			$.ajax({
 				url: '/api/v1/clearCookie',
@@ -95,14 +112,14 @@ var mediatorServerApi = (function( PubSub ) {
 				dataType: 'json',
 			})
 			.then(function(res) {
-				console.log(res);
+				defer.resolve(res);
 			})
 			.fail(function(err) {
-				console.log(err);
+				defer.reject(err);
 			});
-		},
 
-		on : pubsub.subscribe.bind(pubsub)
+			return defer.promise;
+		},
 	}
 
 })(PubSub);

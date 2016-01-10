@@ -25,3 +25,7 @@ button[data-role="exit"]{
 .message_content{
 	color: #402D2D;
 }
+div[data-role="load"]{
+	display: none;
+	font-size: xx-large;
+}
