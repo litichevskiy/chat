@@ -29,7 +29,7 @@
 
         })
         .then(function( res ){
-            debugger;
+
             BlockMessageContent.addMessages.call( BlockMessageContent, res );
         })
         .fail(function(err){
