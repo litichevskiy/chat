@@ -81,5 +81,6 @@ $('button[data-name="newUser"]').click(function(event) {
 	})
 	.fail(function(err){
 		console.log(err);
+		checkResponse( err );
 	});
 });
