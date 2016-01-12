@@ -4,6 +4,7 @@ button[data-role="exit"]{
 	right: 2%;
 }
 .list-unstyled.list_message{
+	word-wrap: normal;
 	font-size: 1.5em;
 	width: 94%;
 	margin-left: 2%;
