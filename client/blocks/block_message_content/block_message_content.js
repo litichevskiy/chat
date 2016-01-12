@@ -4,17 +4,15 @@
 		inProgress = $('[data-role="load"]')[0],
 		render,
 		resCheck,
-		QUANTITY,
 		ROOM,
 		topHistory = false;
 
 	var theBlock;
 
 
-	function BlockMessageContentInit ( quantity, room ) {
+	function BlockMessageContentInit ( room ) {
 
-		QUANTITY = quantity;
-		ROOM     = room;
+		ROOM = room;
 
 		var defer = $.Deferred();
 
@@ -97,12 +95,9 @@
         if ( topHistory ) return;
 
         var myLastId = Number( $('li[data-id_message]:first')[0].dataset.id_message ),
-            fromId = myLastId - QUANTITY,
-            quantity = QUANTITY;
+            fromId = myLastId;
 
-        if ( fromId < 0 ) {
-            quantity = myLastId -1;
-            fromId = 0;
+        if ( fromId === 0 ) {
             topHistory = true;
         }
 
@@ -110,17 +105,14 @@
 
         $(inProgress).show();
 
-        $.when(
+        serverAPI.getMessage({
 
-            serverAPI.getMessage({
+            room     : ROOM,
+            fromId   : fromId
 
-                quantity : quantity,
-                room     : ROOM,
-                fromId   : fromId
-
-            })
-        )
+        })
         .then(function(res){
+
             theBlock.addMessages( res );
             $(inProgress).hide();
         })
@@ -129,7 +121,6 @@
             console.log(err)
         })
     };
-
 
 
     $('div[data-role="block_message_content"]').scroll(function(){

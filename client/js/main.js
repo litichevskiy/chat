@@ -1,14 +1,13 @@
 (function( PubSub, BlockMessageContentInit, serverAPI, socketInit, blockMessagePostInit ){
 
     var USER     = login,
-        QUANTITY = 20,
         ROOM     = 'room_1',
         pubsub   = new PubSub;
 
 
     $.when(
 
-        BlockMessageContentInit( QUANTITY, ROOM ),
+        BlockMessageContentInit( ROOM ),
         socketInit({ pubsub : pubsub, io : io })
     )
     .then(function( BlockMessage, socket ){
@@ -24,15 +23,11 @@
                 pubsub
             );
 
-        $.when(
+        serverAPI.getMessage({
+            room     : ROOM,
+            fromId   : undefined
 
-            serverAPI.getMessage({
-                quantity : QUANTITY,
-                room     : ROOM,
-                fromId   : undefined
-
-            })
-        )
+        })
         .then(function( res ){
             debugger;
             BlockMessageContent.addMessages.call( BlockMessageContent, res );
