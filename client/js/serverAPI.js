@@ -99,7 +99,7 @@ var serverAPI = (function( PubSub ) {
 				defer.reject(error);
 			});
 
-			return defer.promise;
+			return defer.promise();
 		},
 
 		clearCookie : function (  ) {
@@ -118,7 +118,7 @@ var serverAPI = (function( PubSub ) {
 				defer.reject(err);
 			});
 
-			return defer.promise;
+			return defer.promise();
 		},
 	}
 
