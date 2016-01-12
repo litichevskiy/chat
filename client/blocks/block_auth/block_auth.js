@@ -12,6 +12,8 @@
 		$(int).each(function(index, el) {
 			el.val('')
 		});
+
+		$(log).focus();
 	};
 
 	function clear() {
