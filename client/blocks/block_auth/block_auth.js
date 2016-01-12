@@ -50,20 +50,18 @@
 $('button[data-name="openChat"]').click(function(event) {
 	event.preventDefault();
 
-	$.when(
+	serverAPI.getUser({
 
-		serverAPI.getUser({
+		login    : $('input[name="login"]').val(),
+		password : $('input[data-name="passsword"]').val()
 
-			login    : $('input[name="login"]').val(),
-			password : $('input[data-name="passsword"]').val()
-
-		})
-	)
+	})
 	.then(function(res){
 		checkResponse( res );
 	})
 	.fail(function(err){
 		console.log(err);
+		checkResponse( err );
 	});
 });
 
@@ -71,15 +69,13 @@ $('button[data-name="openChat"]').click(function(event) {
 $('button[data-name="newUser"]').click(function(event) {
 	event.preventDefault();
 
-	$.when(
 
-		serverAPI.createUser({
+	serverAPI.createUser({
 
-			login    : $('input[name="login"]').val(),
-			password : $('input[data-name="passsword"]').val()
+		login    : $('input[name="login"]').val(),
+		password : $('input[data-name="passsword"]').val()
 
-		})
-	)
+	})
 	.then(function(res){
 		checkResponse( res );
 	})

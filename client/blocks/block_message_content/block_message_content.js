@@ -2,12 +2,11 @@
 
 	var parentBlockMessageContent = $('.column')[1],
 		inProgress = $('[data-role="load"]')[0],
-		chechInProgress = false,
 		render,
 		resCheck,
 		QUANTITY,
 		ROOM,
-		CHECK_FUNCTION = true;
+		topHistory = false;
 
 	var theBlock;
 
@@ -87,10 +86,6 @@
 		$(that.container).html( listMassage + html );
 		scrollInBottom();
 
-		if( chechInProgress ) {
-
-			$(inProgress).hide();
-		}
 	};
 
 	function scrollInBottom ( ) {
@@ -98,59 +93,50 @@
 	};
 
 	function loadHistoryMessage ( ) {
+        debugger;
+        if ( topHistory ) return;
 
-        var fromId = Number( $('li[data-id_message]:first')[0]
-            .dataset.id_message ) - QUANTITY;
+        var myLastId = Number( $('li[data-id_message]:first')[0].dataset.id_message ),
+            fromId = myLastId - QUANTITY,
+            quantity = QUANTITY;
 
-            resCheck = checkFromId( fromId, QUANTITY  );
+        if ( fromId < 0 ) {
+            quantity = myLastId -1;
+            fromId = 0;
+            topHistory = true;
+        }
+
+        if ( myLastId === 0 ) return;
+
+        $(inProgress).show();
 
         $.when(
 
             serverAPI.getMessage({
 
-                quantity : resCheck.quantity,
+                quantity : quantity,
                 room     : ROOM,
-                fromId   : resCheck.fromId
+                fromId   : fromId
 
             })
         )
         .then(function(res){
             theBlock.addMessages( res );
+            $(inProgress).hide();
         })
         .fail(function(err){
+            $(inProgress).hide();
             console.log(err)
         })
     };
 
-    function checkFromId( fromId, QUANTITY ) {
-
-        if ( fromId <= 0 ) {
-
-            CHECK_FUNCTION = false;
-
-            QUANTITY = Number( $('li[data-id_message]:first')[0]
-            .dataset.id_message) -1;
-            fromId = 0;
-
-            return {
-                fromId   : fromId,
-                quantity : QUANTITY
-            };
-        }
-            return {
-                fromId   : fromId,
-                quantity : QUANTITY
-            };
-    };
 
 
     $('div[data-role="block_message_content"]').scroll(function(){
 
-        if (this.scrollTop === 0 && CHECK_FUNCTION ) {
+        if (this.scrollTop === 0 && !topHistory ) {
 
             loadHistoryMessage();
-            $(inProgress).show();
-            chechInProgress = true;
         }
     });
 
