@@ -2,19 +2,23 @@
 
 	var parentBlockMessageContent = $('.column')[1],
 		inProgress = $('[data-role="load"]')[0],
+		announcement = $('[data-role="new message"]')[0],
+		htmlAnnouncement = $(announcement).html(),
 		render,
 		resCheck,
 		QUANTITY,
 		ROOM,
+		USER,
+		countNewMessage = 1,
 		topHistory = false;
 
 	var theBlock;
-
 
 	function BlockMessageContentInit ( quantity, room ) {
 
 		QUANTITY = quantity;
 		ROOM     = room;
+		USER     = login; // window
 
 		var defer = $.Deferred();
 
@@ -49,10 +53,11 @@
 	BlockMessageContent.prototype.addMessage = function( data ) {
 
 		var that = ( this === window ) ? theBlock : this,
-			newHtml = '';
-
-			lastElemList = $(that.container).find('li:last')[0] || $(that.container);
+			newHtml = '',
+			userName = data.user,
+			lastElemList = $(that.container).find('li:last')[0] || $(that.container),
 			html = $(lastElemList).html();
+
 
 			newHtml = render({
 
@@ -62,8 +67,10 @@
 				time    : data.time
 			});
 
-			$(lastElemList).html( html + newHtml )
-			scrollInBottom();
+		$(lastElemList).html( html + newHtml );
+		debugger;
+		if ( userName === USER ) return scrollInBottom();
+			return f();
 	};
 
 	BlockMessageContent.prototype.addMessages = function ( list ) {
@@ -84,16 +91,30 @@
 		});
 
 		$(that.container).html( listMassage + html );
-		scrollInBottom();
+		// scrollInBottom();
 
 	};
 
 	function scrollInBottom ( ) {
+
+		lastMessage = $('')
+
+		// if ( .clientHeight ){
+		// 	$(announcement).show('slow');
+		// }
 		parentBlockMessageContent.scrollTop = parentBlockMessageContent.scrollHeight;
 	};
 
+	function f (){
+
+		$(announcement).show('slow');
+
+		$(announcement).html( htmlAnnouncement + ' ' + countNewMessage++ );
+
+	};
+
 	function loadHistoryMessage ( ) {
-        debugger;
+
         if ( topHistory ) return;
 
         var myLastId = Number( $('li[data-id_message]:first')[0].dataset.id_message ),
