@@ -2,6 +2,7 @@
 
     const
         REGEXP_TIME        = /.+?:\d\d\b/,
+        REGEXP_CHECK_EMPTY_STRING = /^[\t\s\n\r]+$/,
         KEYDOWN_ENTER      = 13,
         MAX_LEHGTH_MESSAGE = 500;
 
@@ -26,7 +27,13 @@
 
         function postMessage (){
 
-            if ( ( input.val() ).length > MAX_LEHGTH_MESSAGE ) {
+            var messageLength = $(input).val().length,
+                message = $(input).val();
+
+            if (    ( messageLength > MAX_LEHGTH_MESSAGE ) ||
+                    ( messageLength === 0 ) ||
+                    ( REGEXP_CHECK_EMPTY_STRING.test( message ) )
+            ) {
 
                 return errorLengthMessage( MAX_LEHGTH_MESSAGE );
             };
@@ -51,21 +58,19 @@
             input.focus();
         };
 
-        function errorLengthMessage ( text ) {
+        function errorLengthMessage ( max ) {
             var message = $('.warning-message').html(
 
-                    'WARNING: max length message ' + text + ' simbol'
+                    'WARNING: min 1 simbol, max ' + max + ' simbol'
                 );
-                setTimeout(function(){
-                    $(message).html('');
-                }, 3000)
+            setTimeout(function(){
+                $(message).html('');
+            }, 3000)
         };
 
         $('textarea[data-role="message"]').keyup(function(event) {
 
-            inputText = $(input).val().length;
-
-            if ( event.keyCode === KEYDOWN_ENTER && inputText > 0 ) {
+            if ( event.keyCode === KEYDOWN_ENTER ) {
 
                 return postMessage();
             }
