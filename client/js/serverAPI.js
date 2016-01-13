@@ -11,7 +11,6 @@ var serverAPI = (function( PubSub ) {
 				type: 'GET',
 				dataType: 'json',
 				data: {
-					quantity : data.quantity,
 					room     : data.room,
 					fromId   : data.fromId
 				},

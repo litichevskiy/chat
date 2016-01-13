@@ -48,16 +48,15 @@ module.exports = function( storage ) {
 		getMessages : function( req, res, next ) {
 
 			var room = req.query.room,
-				quantity = req.query.quantity,
 				fromId = req.query.fromId;
 
-			if ( !room ||  !quantity ){
+			if ( !room ){
 				res.status( 400 );
-				res.json({ result : 'room and quantity are required' });
+				res.json({ result : 'room are required' });
 
 			} else {
 
-				storage.getMessages( room, quantity, fromId )
+				storage.getMessages( room, fromId )
 				.then( function( list ) {
 					res.status( 200 );
 					res.json({ listMassage : list });

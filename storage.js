@@ -3,34 +3,30 @@
 var Q = require('q'),
 	bd_Users = {},
 	bd_Messages = [],
-	LAST_MESSAGE = 0,
-	MESSAGE = 'больше сообщений нет';
+	QUANTITY = 20;
 
 var storage = {
 
-	getMessages : function( room, quantity, fromId ) {
+	getMessages : function( room, fromId ) {
 		var defer = Q.defer(),
-			list;
+			list,
+			cashFromId;
 
-			quantity = Number( quantity );
+		if ( fromId !== undefined ) {
 
-		if ( fromId !== undefined ){
 			fromId = Number( fromId );
 
-			if( fromId === LAST_MESSAGE ) {
+			cashFromId = fromId;
+			fromId -= QUANTITY;
 
-				list = bd_Messages.slice( fromId, quantity );
-				list.unshift( {content:MESSAGE} )
-				defer.resolve( list );
-			} else{
+			if ( fromId <= 0 ) fromId = 0;
 
-				list = bd_Messages.slice( fromId,  quantity + fromId );
-				defer.resolve( list );
-			}
+			list = bd_Messages.slice( fromId,  cashFromId );
+			defer.resolve( list );
 
 		} else{
 
-			list = bd_Messages.slice( bd_Messages.length - quantity );
+			list = bd_Messages.slice( bd_Messages.length - QUANTITY );
 			defer.resolve( list );
 		}
 
