@@ -10,11 +10,13 @@
 		ROOM,
 		USER,
 		countNewMessage = 1,
+		heightContent,
+		measureHeightContent = true,
 		topHistory = false;
 
 	var theBlock;
 
-	function BlockMessageContentInit ( quantity, room ) {
+	function blockMessageContentInit ( quantity, room ) {
 
 		QUANTITY = quantity;
 		ROOM     = room;
@@ -27,7 +29,7 @@
 
 			render = jade.compile( template )
 			defer.resolve( BlockMessageContent );
-			delete window.BlockMessageContentInit;
+			delete window.blockMessageContentInit;
 		})
 		.fail(function(err){
 			defer.reject( err )
@@ -52,10 +54,9 @@
 
 	BlockMessageContent.prototype.addMessage = function( data ) {
 
-		var that = ( this === window ) ? theBlock : this,
-			newHtml = '',
+		var newHtml = '',
 			userName = data.user,
-			lastElemList = $(that.container).find('li:last')[0] || $(that.container),
+			lastElemList = $(this.container).find('li:last')[0] || $(this.container),
 			html = $(lastElemList).html();
 
 
@@ -67,17 +68,24 @@
 				time    : data.time
 			});
 
-		$(lastElemList).html( html + newHtml );
-		debugger;
-		if ( userName === USER ) return scrollInBottom();
-			return f();
+
+		if ( userName === USER ) {
+
+			$(lastElemList).html( html + newHtml );
+			theBlock.scrollInBottom();
+
+		} else {
+
+			showAnnouncement();
+			rememberHeightContent();
+			$(lastElemList).html( html + newHtml );
+		}
 	};
 
 	BlockMessageContent.prototype.addMessages = function ( list ) {
 
-		var that = ( this === window ) ? theBlock : this,
-			listMassage = '',
-			html = $(that.container).html();
+		var listMassage = '',
+			html = $(this.container).html();
 
 		list.forEach(function(data){
 
@@ -90,27 +98,28 @@
 			})
 		});
 
-		$(that.container).html( listMassage + html );
-		// scrollInBottom();
+		$(this.container).html( listMassage + html );
 
 	};
 
-	function scrollInBottom ( ) {
+	BlockMessageContent.prototype.scrollInBottom = function ( ) {
 
-		lastMessage = $('')
-
-		// if ( .clientHeight ){
-		// 	$(announcement).show('slow');
-		// }
 		parentBlockMessageContent.scrollTop = parentBlockMessageContent.scrollHeight;
 	};
 
-	function f (){
+	function showAnnouncement () {
 
 		$(announcement).show('slow');
-
 		$(announcement).html( htmlAnnouncement + ' ' + countNewMessage++ );
+	};
 
+	function rememberHeightContent () {
+
+		if ( measureHeightContent ) {
+			debugger;
+			measureHeightContent = false;
+			heightContent = parentBlockMessageContent.scrollHeight;
+		}
 	};
 
 	function loadHistoryMessage ( ) {
@@ -157,11 +166,22 @@
 
         if (this.scrollTop === 0 && !topHistory ) {
 
-            loadHistoryMessage();
+			loadHistoryMessage();
+            return;
         }
+
     });
 
+	$('[data-role="new message"]').click(function(event) {
 
-	exports.BlockMessageContentInit = BlockMessageContentInit;
+		parentBlockMessageContent.scrollTop = heightContent;
+		measureHeightContent = true;
+		countNewMessage = 1;
+		heightContent = 0;
+		$(announcement).hide('slow');
+	});
+
+
+	exports.blockMessageContentInit = blockMessageContentInit;
 
 })( window, serverAPI );

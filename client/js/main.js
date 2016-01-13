@@ -1,4 +1,4 @@
-(function( PubSub, BlockMessageContentInit, serverAPI, socketInit, blockMessagePostInit ){
+(function( PubSub, blockMessageContentInit, serverAPI, socketInit, blockMessagePostInit ){
 
     var USER     = login,
         QUANTITY = 20,
@@ -8,7 +8,7 @@
 
     $.when(
 
-        BlockMessageContentInit( QUANTITY, ROOM ),
+        blockMessageContentInit( QUANTITY, ROOM ),
         socketInit({ pubsub : pubsub, io : io })
     )
     .then(function( BlockMessage, socket ){
@@ -19,34 +19,31 @@
             socket, ROOM, USER
         )
 
-        var BlockMessageContent = new BlockMessage(
+        var blockMessageContent = new BlockMessage(
                 $('div[data-role="block_message_content"]')[0],
                 pubsub
             );
 
-        $.when(
-
-            serverAPI.getMessage({
-                quantity : QUANTITY,
-                room     : ROOM,
-                fromId   : undefined
-
-            })
-        )
+        serverAPI.getMessage({
+            quantity : QUANTITY,
+            room     : ROOM,
+            fromId   : undefined
+        })
         .then(function( res ){
-            debugger;
-            BlockMessageContent.addMessages.call( BlockMessageContent, res );
+
+            blockMessageContent.addMessages( res );
+            blockMessageContent.scrollInBottom();
         })
         .fail(function(err){
             console.log( err );
         })
 
 
-        BlockMessageContent.pubsub.subscribe('addMessage',
-            BlockMessageContent.addMessage.bind(BlockMessageContent)
+        blockMessageContent.pubsub.subscribe('addMessage',
+            blockMessageContent.addMessage.bind(blockMessageContent)
         );
-        BlockMessageContent.pubsub.subscribe('newMessage',
-            BlockMessageContent.addMessage.bind(BlockMessageContent)
+        blockMessageContent.pubsub.subscribe('newMessage',
+            blockMessageContent.addMessage.bind(blockMessageContent)
         );
 
         pubsub.subscribe('addMessage', function( data ) {
@@ -65,4 +62,4 @@
         console.log( err );
     })
 
-})( PubSub, BlockMessageContentInit, serverAPI, socketInit, blockMessagePostInit );
+})( PubSub, blockMessageContentInit, serverAPI, socketInit, blockMessagePostInit );

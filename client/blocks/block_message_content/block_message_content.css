@@ -1,5 +1,5 @@
 button[data-role="exit"]{
-	position: absolute;
+	position: fixed;
 	top: 0.5em;
 	right: 2%;
 	margin-right: 1em;
@@ -40,4 +40,7 @@ span[data-role="new message"]{
 	padding: 0.5em;
 	background-color: #77D1EF;
 	color:white;
+}
+span[data-role="new message"]:hover{
+	cursor: pointer;
 }
