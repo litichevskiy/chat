@@ -61,7 +61,7 @@
                 }, 3000)
         };
 
-        $('textarea[data-role="message"]').keydown(function(event) {
+        $('textarea[data-role="message"]').keyup(function(event) {
 
             inputText = $(input).val().length;
 
