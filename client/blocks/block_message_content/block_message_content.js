@@ -1,9 +1,12 @@
 (function( exports, serverAPI ) {
 
+
 	var parentBlockMessageContent = $('.column')[1],
 		inProgress = $('[data-role="load"]')[0],
 		announcement = $('[data-role="new message"]')[0],
 		htmlAnnouncement = $(announcement).html(),
+		ringtone = $('[data-role = "ringtoneMessage"]')[0],
+		sound = $('input[data-role="sound"]')[0],
 		render,
 		resCheck,
 		ROOM,
@@ -22,7 +25,7 @@
 
 		var defer = $.Deferred();
 
-		$.get('/views/messageTemplate.jade')
+		$.get('/views/messageTemplate.jade') 
 		.then(function( template ){
 
 			render = jade.compile( template )
@@ -35,7 +38,7 @@
 		return defer.promise();
 	};
 
-	// singleton
+	// singleton 
 	function BlockMessageContent ( htmlElement, pubsub ) {
 
 		if ( theBlock ) {
@@ -44,7 +47,7 @@
 		theBlock = this;
 
 		this.container = $('<ul class="list-unstyled list_message"></ul>');
-		$(htmlElement).append(this.container);
+		$(htmlElement).append(this.container)[0];
 
 		this.pubsub = pubsub;
 	};
@@ -53,30 +56,31 @@
 	BlockMessageContent.prototype.addMessage = function( data ) {
 
 		var newHtml = '',
-			userName = data.user,
-			lastElemList = $(this.container).find('li:last')[0] || $(this.container),
-			html = $(lastElemList).html();
-
+			userName = data.user;
 
 			newHtml = render({
 
-				id      : data.id || '',
+				id      : data.id,
 				name    : data.user,
 				content : data.content,
 				time    : data.time
 			});
 
-
 		if ( userName === USER ) {
 
-			$(lastElemList).html( html + newHtml );
+			$(this.container).append(newHtml);
 			theBlock.scrollInBottom();
 
 		} else {
 
-			showAnnouncement();
 			rememberHeightContent();
-			$(lastElemList).html( html + newHtml );
+			$(this.container).append(newHtml);
+
+			if ( $(this.container).height() >= $(parentBlockMessageContent).height() ){
+
+				showAnnouncement();
+			}
+			messageRingtone();
 		}
 	};
 
@@ -89,7 +93,7 @@
 
 			listMassage += render({
 
-				id      : data.id || '',
+				id      : data.id,
 				name    : data.user,
 				content : data.content,
 				time    : data.time
@@ -114,7 +118,7 @@
 	function rememberHeightContent () {
 
 		if ( measureHeightContent ) {
-			debugger;
+
 			measureHeightContent = false;
 			heightContent = parentBlockMessageContent.scrollHeight;
 		}
@@ -152,6 +156,10 @@
         })
     };
 
+	function messageRingtone () {
+	
+		if ( $(sound).prop('checked') ) ringtone.play();
+	};
 
     $('div[data-role="block_message_content"]').scroll(function(){
 

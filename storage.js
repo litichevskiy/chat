@@ -4,7 +4,7 @@ var Q = require('q'),
 	bd_Users = {},
 	bd_Messages = [],
 	QUANTITY = 20;
-
+	
 var storage = {
 
 	getMessages : function( room, fromId ) {
@@ -21,7 +21,7 @@ var storage = {
 
 			if ( fromId <= 0 ) fromId = 0;
 
-			list = bd_Messages.slice( fromId,  cashFromId );
+			list = bd_Messages.slice( fromId,  cashFromId );  
 			defer.resolve( list );
 
 		} else{
@@ -60,12 +60,26 @@ var storage = {
 		var defer = Q.defer();
 
 		if ( bd_Users.hasOwnProperty(login) ){
+
 			defer.resolve(bd_Users[login]);
 		} else {
-			defer.reject(new Error('no such user "' + login + '"'));
+			
+			defer.reject(new Error('STORAGE: no such user "' + login + '"'));
 		}
 
 		return defer.promise;
+	},
+
+	getAllUsers : function () {
+		var list = [],
+			key;
+
+		for( key in bd_Users ){
+
+			list.push({name:bd_Users[key].login,status:bd_Users[key].online});
+		}	
+
+		return Q.resolve( list );
 	}
 };
 

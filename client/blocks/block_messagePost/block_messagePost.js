@@ -35,24 +35,15 @@
                     ( REGEXP_CHECK_EMPTY_STRING.test( message ) )
             ) {
 
-                return errorLengthMessage( MAX_LEHGTH_MESSAGE );
+                return errorLengthMessage( MAX_LEHGTH_MESSAGE ); 
             };
-
-            socket.emit('message', {
-
-                text : input.val(),
-                time : getTime(),
-                user : USER,
-                room : ROOM
-            }, function( message ){
-
-                    blockMessagePost.pubsub.publish('addMessage', {
-                        content : message.text,
-                        time    : getTime(),
-                        user    : message.user,
-                        room    : ROOM
-                    });
-                });
+            
+            blockMessagePost.pubsub.publish('serverAPIcreateMessage', {  //'addMessage' 
+                content : message, 
+                time    : getTime(),
+                user    : USER,
+                room    : ROOM
+            });
 
             input.val('');
             input.focus();

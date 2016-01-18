@@ -1,4 +1,4 @@
-var serverAPI = (function( PubSub ) {
+var serverAPI = (function() {
 
 	return {
 
@@ -30,7 +30,7 @@ var serverAPI = (function( PubSub ) {
 		},
 
 		createMessage : function( data ) {
-
+			
 			var defer = $.Deferred();
 
 			$.ajax({
@@ -45,8 +45,8 @@ var serverAPI = (function( PubSub ) {
 				},
 			})
 			.then(function(res){
-				if ( res.status === 400 ) console.log( res );
-				defer.resolve( res.listMassage );
+				// pubsub.publish( 'emitNewMessage', res.res )
+				defer.resolve();
 			})
 			.fail(function(error){
 				defer.reject( error );
@@ -56,7 +56,7 @@ var serverAPI = (function( PubSub ) {
 		},
 
 		createUser : function( user ) {
-
+			
 			var defer = $.Deferred();
 
 			$.ajax({
@@ -65,7 +65,8 @@ var serverAPI = (function( PubSub ) {
 				dataType: 'json',
 				data: {
 					password : user.password,
-					login    : user.login
+					login    : user.login,
+					online   : user.online
 				},
 			})
 			.then( function( res ) {
@@ -88,17 +89,38 @@ var serverAPI = (function( PubSub ) {
 				dataType: 'json',
 				data: {
 					login : user.login,
-					password : user.password
+					password : user.password,
+					online   : user.online
 				},
 			})
 			.then(function(res){
 				defer.resolve( res )
 			})
 			.fail(function(error){
+				console.log(error)
 				defer.reject(error);
 			});
 
 			return defer.promise();
+		},
+
+		getAllUsers : function () {
+
+			var defer = $.Deferred();
+
+			$.ajax({
+				url: '/api/v1/getAllUsers',
+				type: 'GET',
+				dataType: 'json',
+			})
+			.then(function( list ) {
+				
+				pubsub.publish( 'listUsers', list.list ); 
+				defer.resolve();
+			})
+			.fail(function(err)  {
+				defer.reject(err);
+			})
 		},
 
 		clearCookie : function (  ) {
@@ -119,6 +141,14 @@ var serverAPI = (function( PubSub ) {
 
 			return defer.promise();
 		},
+
+		setPubsub : function( o ){
+			pubsub = o;
+		},
+
+		on : function ( event, func ) {
+			pubsub.subscribe( event, func )
+		} 
 	}
 
-})(PubSub);
+})();

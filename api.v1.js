@@ -1,4 +1,4 @@
-module.exports = function( storage ) {
+module.exports = function( storage, pubsub ) {
 
 	var MAX_LEHGTH_MESSAGE = 500;
 
@@ -28,8 +28,10 @@ module.exports = function( storage ) {
 						user 	: req.user,
 						time    : req.body.time
 					})
-					.then( function( ) {
-						res.json({ result : 'success' });
+					.then( function( data ) {
+						pubsub.publish( 'newMessage',data );
+						res.status(200);
+						res.json({ res : data });
 					})
 					.fail(function(error){
 						console.log( error );
@@ -74,6 +76,18 @@ module.exports = function( storage ) {
 			res.status( 200 );
 			res.json({result:'OK'});
 
+		},
+
+		getAllUsers : function ( req, res, next ) { 
+
+			storage.getAllUsers()
+			.then(function(list){
+				res.status( 200 );
+				res.json({ list : list });
+			})
+			.fail(function(err){
+				console.log(err)
+			})
 		}
 	}
 }

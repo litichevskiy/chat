@@ -1,7 +1,7 @@
 var REGEXP_IS_JSON = /application\/json/,
 	COOKIE_EXPIRIES = 1000 * 60 * 15; // 15 min
 
-module.exports = function ( storage ) {
+module.exports = function ( storage, cookieParser, pubsub ) {
 
 	return {
 
@@ -24,7 +24,7 @@ module.exports = function ( storage ) {
 			}
 		},
 
-		extendСookies : function ( req, res, next ) {
+		extendСookies : function ( req, res, next ) { 
 
 			res.cookie('login', req.body.user, {
       			expires: new Date(Date.now() + COOKIE_EXPIRIES ),
@@ -75,12 +75,14 @@ module.exports = function ( storage ) {
 		create : function ( req, res, next ) {
 			var login = req.body.login;
 				password = req.body.password;
+				online = req.body.online;
 
 			if ( login && password ){
 
 				storage.createUser({
 					login : login,
-					password : password
+					password : password,
+					online : online
 				})
 				.then(function(){
 					next();
@@ -96,6 +98,42 @@ module.exports = function ( storage ) {
 				res.json({ result : 'login and password are required'});
 
 			}
+		},
+
+		setUserStatusOnline : function ( request ){
+
+			cookieParser( request, {}, function(){
+			
+				var user = request.cookies.login;
+
+				storage.getUser( user )
+
+				.then(function(user){
+					user.online = true;
+					pubsub.publish('userOnline',user.login); 
+				})
+				.fail(function(err){
+					console.log(err);
+				})
+			})
+		},
+
+		setUserStatusOfline : function ( request ){
+
+			cookieParser( request, {}, function(){
+
+				var user = request.cookies.login;
+
+				storage.getUser( user )
+
+				.then(function(user){
+					user.online = false;
+					pubsub.publish( 'emitUserDisconnect', user.login );
+				})
+				.fail(function(err){
+					console.log(err);
+				})
+			})
 		}
 	}
 }

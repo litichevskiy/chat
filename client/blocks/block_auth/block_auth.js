@@ -55,7 +55,8 @@ $('button[data-name="openChat"]').click(function(event) {
 	serverAPI.getUser({
 
 		login    : $('input[name="login"]').val(),
-		password : $('input[data-name="passsword"]').val()
+		password : $('input[data-name="passsword"]').val(),
+		online   : undefined
 
 	})
 	.then(function(res){
@@ -75,7 +76,8 @@ $('button[data-name="newUser"]').click(function(event) {
 	serverAPI.createUser({
 
 		login    : $('input[name="login"]').val(),
-		password : $('input[data-name="passsword"]').val()
+		password : $('input[data-name="passsword"]').val(),
+		online   : undefined
 
 	})
 	.then(function(res){

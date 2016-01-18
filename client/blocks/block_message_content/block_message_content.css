@@ -10,7 +10,7 @@ button[data-role="exit"]{
 	margin-left: 2%;
 	margin-top: 2%;
 }
-.list_message li{
+.list_message li[data-id_message]{
 	margin-bottom: 0.5em;
 }
 .user_date{
@@ -43,4 +43,15 @@ span[data-role="new message"]{
 }
 span[data-role="new message"]:hover{
 	cursor: pointer;
+}
+div[data-role="sound"]{
+	position:absolute;
+	top:0.5em;
+	right:25%;
+}
+span.sound {
+	margin-right: 0.5em;
+}
+span.sound:hover{
+	cursor:pointer;
 }

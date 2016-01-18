@@ -1,0 +1,6 @@
+.offline, .online{
+	margin-left: 0.5em;
+}
+.offline{
+	color: #C5C1C1;
+}
