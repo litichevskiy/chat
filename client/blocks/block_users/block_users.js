@@ -54,7 +54,7 @@
 
 				name   : user.name,
 				id     : user.name,  
-				status : ( user.status === true ) ? ONLINE : OFFLINE
+				status : ( user.status === true ) ? ONLINE : OFFLINE 
 			})
 		});
 

@@ -1,5 +1,6 @@
 .offline, .online{
 	margin-left: 0.5em;
+	word-wrap: break-word;
 }
 .offline{
 	color: #C5C1C1;

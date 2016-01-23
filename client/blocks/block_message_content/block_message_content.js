@@ -131,11 +131,11 @@
         var myLastId = Number( $('li[data-id_message]:first')[0].dataset.id_message ),
             fromId = myLastId;
 
-        if ( fromId === 0 ) {
+        if ( fromId === 1 ) {
             topHistory = true;
         }
 
-        if ( myLastId === 0 ) return;
+        if ( myLastId === 1 ) return;
 
         $(inProgress).show();
 

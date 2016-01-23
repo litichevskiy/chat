@@ -3,7 +3,7 @@ var serverAPI = (function() {
 	return {
 
 		getMessage : function( data ) {
-
+			
 			var defer = $.Deferred();
 
 			$.ajax({
@@ -16,7 +16,7 @@ var serverAPI = (function() {
 				},
 			})
 			.then(function(res){
-
+				
 				if ( res.status === 400 ) console.log( res );
 				defer.resolve( res.listMassage );
 			})

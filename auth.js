@@ -47,7 +47,7 @@ module.exports = function ( storage, cookieParser, pubsub ) {
 			.then( function( user ){
 
 				if ( user.password === password ){
-					res.cookie('login', req.body.login, {
+					res.cookie('login', req.body.login, { 
         				expires: new Date(Date.now() + COOKIE_EXPIRIES ),
         				Path : '/'
     				});
@@ -64,12 +64,20 @@ module.exports = function ( storage, cookieParser, pubsub ) {
 				}
 			})
 			.fail(function(error){
-				console.log( error );
-				res.status(401).json({
-					result : 'failed',
-					error  : 'unknown user'
-				});
+				if ( error instanceof storage.Error ) {
+					res.status(401).json({
+						result : 'failed',
+						error  : 'unknown user'
+					});
+				} else {
+					console.log('AUTH LOGIN ERROR : ', error, error.stack);
+					res.status(500).json({
+						result : 'failed',
+						error  : 'server error'
+					});
+				}
 			})
+			.done();
 		},
 
 		create : function ( req, res, next ) {
@@ -107,7 +115,6 @@ module.exports = function ( storage, cookieParser, pubsub ) {
 				var user = request.cookies.login;
 
 				storage.getUser( user )
-
 				.then(function(user){
 					user.online = true;
 					pubsub.publish('userOnline',user.login); 

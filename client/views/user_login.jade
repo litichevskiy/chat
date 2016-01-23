@@ -15,8 +15,8 @@ html
         h2(data-role='info').text-info.text-center
         div(data-role='auth')
             form(role='form')
-                input.form-control(type='text' name='login' placeholder='login' autofocus autocomplete = 'off')
-                input.form-control(data-name='passsword' type='password' name='passsword' placeholder='passsword')
+                input.form-control(type='text' name='login' placeholder='login' autofocus autocomplete = 'off' maxlength='30')
+                input.form-control(data-name='passsword' type='password' name='passsword' placeholder='passsword' maxlength='30')
                 button(data-name='openChat').btn.btn-info.btn-lg.btn-block.authorized войти
                 button(data-name='newUser').btn.btn-warning.btn-lg.btn-block.authorized регистрация
 
