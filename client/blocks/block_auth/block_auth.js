@@ -56,7 +56,7 @@ $('button[data-name="openChat"]').click(function(event) {
 
 		login    : $('input[name="login"]').val(),
 		password : $('input[data-name="passsword"]').val(),
-		online   : undefined
+		online   : 'false'
 
 	})
 	.then(function(res){
@@ -77,7 +77,7 @@ $('button[data-name="newUser"]').click(function(event) {
 
 		login    : $('input[name="login"]').val(),
 		password : $('input[data-name="passsword"]').val(),
-		online   : undefined
+		online   : 'false'
 
 	})
 	.then(function(res){

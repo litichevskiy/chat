@@ -180,8 +180,7 @@ var storage = {
 		return connection.query('SELECT COUNT(*) FROM table_messages') 
 		.then(function(response){
 			
-			console.log('response-----',response)
-			lastIdMessage = response[0]['COUNT(*)'];
+			lastIdMessage = response[0]['COUNT(*)']; 
 			data.id = lastIdMessage;
 			
 			return connection.query(
@@ -193,6 +192,26 @@ var storage = {
 				return Q.resolve( data );
 			})
 		})
+	},
+
+	setStatus : function ( login, status ) {
+		
+		var request = 'SELECT login, password FROM users_chat WHERE login='+'"'+login+'"',
+			user;
+		return connection.query( request )
+		.then(function(response){
+			if ( response.length === 0 ) {
+				return Q.reject( new StorageError('STORAGE: no such user "' + login + '"') );
+			}
+			user = response[0];
+				
+			var request = 'UPDATE users_chat SET online='+'"'+status+'" '+'WHERE login="'+login+'"';
+			return connection.query( request )
+			.then(function(response){
+				return Q.resolve( user )
+			})
+		})
+
 	},
 
 	Error : StorageError

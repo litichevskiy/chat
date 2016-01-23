@@ -114,9 +114,9 @@ module.exports = function ( storage, cookieParser, pubsub ) {
 			
 				var user = request.cookies.login;
 
-				storage.getUser( user )
+				storage.setStatus( user, true )
 				.then(function(user){
-					user.online = true;
+					// user.online = true;
 					pubsub.publish('userOnline',user.login); 
 				})
 				.fail(function(err){
@@ -131,10 +131,10 @@ module.exports = function ( storage, cookieParser, pubsub ) {
 
 				var user = request.cookies.login;
 
-				storage.getUser( user )
+				storage.setStatus( user, false )
 
 				.then(function(user){
-					user.online = false;
+					// user.online = false;
 					pubsub.publish( 'emitUserDisconnect', user.login );
 				})
 				.fail(function(err){
