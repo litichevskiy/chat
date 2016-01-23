@@ -6,7 +6,7 @@ initStorage( config )
 .then(function(storage){
     
     console.log('SERVER: OK')
-    var express = require('express'),
+    var express = require('express'), 
         http = require('http'),
         Q = require('q'),
         pubsub = new (require('./pubsub')),

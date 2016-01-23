@@ -2,7 +2,25 @@ var q_mysql = require('./q_mysql'),
 	Q = require('q'),
 	QUANTITY = 20,
 	config,
-	connection;	
+	connection,	
+	createTableMessages = "CREATE TABLE table_messages("+
+		"id INT(11) AUTO_INCREMENT NOT NULL," + 
+		"content VARCHAR(650) NOT NULL," +
+		"time VARCHAR(50) NOT NULL," + 
+		"room VARCHAR(20) NOT NULL,"+ 
+		"user VARCHAR(30) NOT NULL,"+
+		"PRIMARY KEY(id)"+
+	")",
+	createTableUser = "CREATE TABLE users_chat("+
+		"id INT(11) AUTO_INCREMENT NOT NULL,"+  
+		"login VARCHAR(30) NOT NULL,"+ 
+		"password VARCHAR(30) NOT NULL,"+ 
+		"online VARCHAR(10) NOT NULL,"+ 
+		"PRIMARY KEY(id)"+ 
+	")",
+	createBaseData = "CREATE DATABASE",
+	tableUsers = 'users_chat',//????????????????????????
+	tableMessage = 'table_messages';/////???????????????????
 
 Q.longStackSupport = true;
 
@@ -50,13 +68,13 @@ function checkBDExists (config, connection) {
 
 function createBD (config, connection) {
 	console.log( '---BD' )
-	return connection.query( config.createBaseData + ' ' + config.nameDataBase + ' ' )
+	return connection.query( createBaseData + ' ' + config.nameDataBase + ' ' ) //config
 	.then(function(){
 		connection.query('use '+config.nameDataBase)
-		return connection.query( config.createTableMessages )
+		return connection.query( createTableMessages ) // config
 		.then(function(){
 			console.log( '---TABLE USER' )
-			return connection.query( config.createTableUser )
+			return connection.query( createTableUser ) //config
 		})  		
 	})
 
@@ -96,6 +114,7 @@ var storage = {
 				numberMessages = response[0]['COUNT(*)'];
 				cashFromId = numberMessages;
 				numberMessages -= QUANTITY;
+				if ( numberMessages < 0 ) numberMessages = 0;
 				
 				return connection.query(
 					'SELECT * FROM table_messages LIMIT'+' '+numberMessages + ',' + cashFromId
