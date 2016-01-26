@@ -1,5 +1,5 @@
 var REGEXP_IS_JSON = /application\/json/,
-	COOKIE_EXPIRIES = 1000 * 60 * 15; // 15 min
+	COOKIE_EXPIRIES = 31536000000// 1 year in ms 
 
 module.exports = function ( storage, cookieParser, pubsub ) {
 

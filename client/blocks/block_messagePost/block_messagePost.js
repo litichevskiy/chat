@@ -21,9 +21,9 @@
             this.container = container;
         };
 
-        function getTime(){
-            return ( new Date().toString() ).match( REGEXP_TIME ).join();
-        };
+        // function getTime(){
+        //     return ( new Date().toString() ).match( REGEXP_TIME ).join();
+        // };
 
         function postMessage (){
 
@@ -40,7 +40,7 @@
             
             blockMessagePost.pubsub.publish('serverAPIcreateMessage', {  //'addMessage' 
                 content : message, 
-                time    : getTime(),
+                time    : new Date(),
                 user    : USER,
                 room    : ROOM
             });

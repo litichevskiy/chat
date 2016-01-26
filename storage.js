@@ -18,11 +18,9 @@ var q_mysql = require('./q_mysql'),
 		"online VARCHAR(10) NOT NULL,"+ 
 		"PRIMARY KEY(id)"+ 
 	")",
-	createBaseData = "CREATE DATABASE",
-	tableUsers = 'users_chat',//????????????????????????
-	tableMessage = 'table_messages';/////???????????????????
+	createBaseData = "CREATE DATABASE";
 
-Q.longStackSupport = true;
+Q.longStackSupport = true; // ????????
 
 function initStorage ( init_config ){
 
@@ -117,7 +115,7 @@ var storage = {
 				if ( numberMessages < 0 ) numberMessages = 0;
 				
 				return connection.query(
-					'SELECT * FROM table_messages LIMIT'+' '+numberMessages + ',' + cashFromId
+					'SELECT * FROM table_messages LIMIT'+' '+numberMessages + ',' + QUANTITY
 					)
 				.then(function(response){
 					return Q.resolve( response );

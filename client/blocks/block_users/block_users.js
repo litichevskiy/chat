@@ -38,7 +38,7 @@
 
 		this.pubsub = pubsub;
 
-		this.container = $('<ul class="list-unstyled list_message"></ul>');
+		this.container = $('<ul class="list-unstyled list_users"></ul>');
 		$(htmlElement).append(this.container)[0];
 	};
 

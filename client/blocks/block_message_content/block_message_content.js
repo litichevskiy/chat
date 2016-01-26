@@ -1,20 +1,27 @@
 (function( exports, serverAPI ) {
 
 
-	var parentBlockMessageContent = $('.column')[1],
+	var REGEXP_TIME = /.+?\d\d\d\d\b/,
+		parentBlockMessageContent = $('.column')[1],
 		inProgress = $('[data-role="load"]')[0],
 		announcement = $('[data-role="new message"]')[0],
 		htmlAnnouncement = $(announcement).html(),
 		ringtone = $('[data-role = "ringtoneMessage"]')[0],
 		sound = $('input[data-role="sound"]')[0],
+		blockMessageContent = $('div[data-role="block_message_content"]')[0],
 		render,
 		resCheck,
 		ROOM,
 		USER,
-		countNewMessage = 1,
+		DOWN = 40,
+		countNewMessage = 0,
 		heightContent,
 		measureHeightContent = true,
-		topHistory = false;
+		topHistory = false,
+		heightUnReadMessage = [],
+		lastMessage,
+		heightListMessage,
+		heightNewMessage;
 
 	var theBlock;
 
@@ -53,6 +60,65 @@
 	};
 
 
+	function get_Date( date ){
+        return ( new Date( date ).toString() ).match( REGEXP_TIME ).join();
+    };
+
+	function getHoursAndMinutes ( timeInFormat_new_Date ) {
+		var time = new Date( timeInFormat_new_Date );
+			minutes = time.getMinutes();
+			hours = time.getHours();
+			( minutes < 10 ) ? minutes = '0' + minutes : minutes;
+			( hours < 10 ) ? hours = '0' + hours : hours;
+		return hours + ' : ' + minutes; 
+	};
+
+
+	var getDateSeparator = function () {
+
+		var storageSeparator = {
+			year : 0,
+			month : 0,
+			dayMonth : 0,
+			liDate : ''
+		};
+
+		return {
+
+			getDate : function ( container, timeInFormat_new_Date ) {
+
+			var date = new Date( timeInFormat_new_Date ),
+				year = date.getFullYear(),
+				month = date.getMonth(),
+				dayMonth = date.getDate();
+
+				if ( storageSeparator.year !== year ||
+				 	storageSeparator.month !== month ||
+				 	storageSeparator.dayMonth !== dayMonth  ) {
+					getDateSeparator.createNewSeparator({
+						date      : date,
+						year      : year,
+						month     : month,
+						dayMonth  : dayMonth,
+						container : container
+					})
+					storageSeparator.year = year;
+					storageSeparator.month = month;
+					storageSeparator.dayMonth = dayMonth;
+					return storageSeparator.liDate;
+				}
+				return storageSeparator.liDate;	
+			},
+
+			createNewSeparator : function ( o ) {
+				storageSeparator.liDate = $('<li data-time="'+o.year+','+o.month+','+ o.dayMonth+'"></li>');
+				storageSeparator.liDate.html( get_Date( o.date ) );
+				$(o.container).prepend( storageSeparator.liDate );
+			}
+		}
+	}();
+
+
 	BlockMessageContent.prototype.addMessage = function( data ) {
 
 		var newHtml = '',
@@ -63,7 +129,7 @@
 				id      : data.id,
 				name    : data.user,
 				content : data.content,
-				time    : data.time
+				time    : getHoursAndMinutes( data.time )
 			});
 
 		if ( userName === USER ) {
@@ -74,7 +140,13 @@
 		} else {
 
 			rememberHeightContent();
+			
+			lastMessage = $(this.container).find('li:last');
+			heightListMessage = $(this.container).height()
 			$(this.container).append(newHtml);
+		
+			heightNewMessage = ( $(lastMessage).next() ).height()
+			heightUnReadMessage.push( heightListMessage - heightNewMessage ); 
 
 			if ( $(this.container).height() >= $(parentBlockMessageContent).height() ){
 
@@ -87,21 +159,26 @@
 	BlockMessageContent.prototype.addMessages = function ( list ) {
 
 		var listMassage = '',
-			html = $(this.container).html();
+			dateSeparator,
+			html = $(this.container).html(),
+			that = this;
 
-		list.forEach(function(data){
+			list.reverse();
 
-			listMassage += render({
+		list.forEach(function(data) {
+
+			dateSeparator = getDateSeparator.getDate( that.container, data.time );
+
+			listMassage = render({
 
 				id      : data.id,
 				name    : data.user,
 				content : data.content,
-				time    : data.time
+				time    : getHoursAndMinutes(data.time)
 			})
+
+			$( dateSeparator ).after( listMassage );
 		});
-
-		$(this.container).html( listMassage + html );
-
 	};
 
 	BlockMessageContent.prototype.scrollInBottom = function ( ) {
@@ -112,7 +189,8 @@
 	function showAnnouncement () {
 
 		$(announcement).show('slow');
-		$(announcement).html( htmlAnnouncement + ' ' + countNewMessage++ );
+		countNewMessage += 1
+		$(announcement).html( htmlAnnouncement + ' ' + countNewMessage );
 	};
 
 	function rememberHeightContent () {
@@ -161,25 +239,45 @@
 		if ( $(sound).prop('checked') ) ringtone.play();
 	};
 
-    $('div[data-role="block_message_content"]').scroll(function(){
+	// function updateHtmlAnnouncement(){
+	// 	countNewMessage -= 1;
+    		
+ //    	$(announcement).html( htmlAnnouncement + ' ' + countNewMessage );
+ //    	heightUnReadMessage.splice( 0, 1 )
+ //    	if ( heightUnReadMessage.length === 1 ){
+ //    		countNewMessage = 0;
+ //    		heightUnReadMessage.splice( 0, 1 )
+ //    		$(announcement).hide('slow');
+ //    	}
+	// }
+
+    $(blockMessageContent).scroll(function(event){
 
         if (this.scrollTop === 0 && !topHistory ) {
 
 			loadHistoryMessage();
             return;
         }
-
+        
+    	if ( this.scrollTop >= heightUnReadMessage[0] ){
+    		$(announcement).hide('slow');
+    		// updateHtmlAnnouncement();
+    	}
     });
 
-	$('[data-role="new message"]').click(function(event) {
+	$(announcement).click(function(event) {
 
 		parentBlockMessageContent.scrollTop = heightContent;
 		measureHeightContent = true;
-		countNewMessage = 1;
+		countNewMessage = 0; // 1
 		heightContent = 0;
 		$(announcement).hide('slow');
 	});
-
+	
+	$(document).keydown(function(event) {
+		
+		if ( event.keydown === DOWN ) return updateHtmlAnnouncement();
+	});
 
 	exports.blockMessageContentInit = blockMessageContentInit;
 

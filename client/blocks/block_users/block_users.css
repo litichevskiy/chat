@@ -5,3 +5,9 @@
 .offline{
 	color: #C5C1C1;
 }
+.list_users{
+	font-size: 1.5em;
+	width: 94%;
+	margin-left: 2%;
+	margin-top: 2%;
+}
