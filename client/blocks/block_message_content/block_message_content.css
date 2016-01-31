@@ -1,44 +1,47 @@
 button[data-role="exit"]{
-	position:absolute;
-	/*position: fixed;*/
-	top: 0.5em;
-	right: 2%;
+	margin-top: 0.3em;
 	margin-right: 1em;
+	padding:0.1em;
+	width: 3em;
 }
 .list-unstyled.list_message{
 	font-size: 1.5em;
-	width: 94%;
-	margin-left: 2%;
+	width: 100%;
+	/*margin-left: 2%;*/
 	margin-top: 2%;
 }
 .list_message li[data-id_message]{
-	margin-bottom: 0.5em;
+	/*margin-bottom: 0.5em;*/
+	padding-bottom: 0.5em;
 }
 .user_date{
 	font-size: small;
-	display: block;
 	margin-bottom: -4px;
 }
 .user_name{
+	margin-left: 0.5em;
 	margin-bottom: -5px;
-	display: block;
+	/*display: block;*/
 	font-weight: bold;
 }
 .message_content{
+	padding-left: 2em;
+	display:block;
 	word-wrap: break-word;
-	color: #402D2D;
+	white-space: inherit;
+	color:#333;
 }
 div[data-role="load"]{
 	display: none;
 	font-size: xx-large;
 }
 span[data-role="new message"]{
+	height: 2em;
 	display:none;
-	position: absolute;
-	top: 0.5em;
-	right: 8em;
-	border-radius: 1em;
-	padding: 0.5em;
+	margin-top: 0.3em;
+	margin-right: 1em;
+	border-radius: 4px;
+	padding: 0.1em;
 	background-color: #77D1EF;
 	color:white;
 }
@@ -46,13 +49,26 @@ span[data-role="new message"]:hover{
 	cursor: pointer;
 }
 div[data-role="sound"]{
-	position:absolute;
-	top:0.5em;
-	right:25%;
+	margin-right: 1em;
+	margin-top: 0.3em;
 }
 span.sound {
 	margin-right: 0.5em;
 }
 span.sound:hover{
 	cursor:pointer;
+}
+.separate{
+	padding-left: 4em;
+	font-size: 1;
+	background-color: aliceblue;
+	color: #5EABC1;
+}
+span.lead{
+	margin-bottom: 0;
+}
+.selection_panel{
+	display:flex;
+	justify-content: flex-end;
+	height: 2.5em;
 }

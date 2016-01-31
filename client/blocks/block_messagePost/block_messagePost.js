@@ -4,14 +4,16 @@
         REGEXP_TIME        = /.+?:\d\d\b/,
         REGEXP_CHECK_EMPTY_STRING = /^[\t\s\n\r]+$/,
         KEYDOWN_ENTER      = 13,
-        MAX_LEHGTH_MESSAGE = 500;
+        MAX_LEHGTH_MESSAGE = 500,
+        MAX_ROWS_TEXTAREA  = 2;
 
     function blockMessagePostInit ( pubsub, container, socket, room, user ) {
 
-        var input  = $('textarea'),
+        var textarea  = $('textarea'),
             socket = socket,
             ROOM   = room,
-            USER   = user;
+            USER   = user,
+            post = $('[data-name="postMessage"]');
 
             blockMessagePost = new BlockMessagePost( pubsub, container );
 
@@ -27,26 +29,26 @@
 
         function postMessage (){
 
-            var messageLength = $(input).val().length,
-                message = $(input).val();
+            var messageLength = $(textarea).val().length,
+                message = $(textarea).val();
 
             if (    ( messageLength > MAX_LEHGTH_MESSAGE ) ||
                     ( messageLength === 0 ) ||
                     ( REGEXP_CHECK_EMPTY_STRING.test( message ) )
             ) {
 
-                return errorLengthMessage( MAX_LEHGTH_MESSAGE ); 
+                return errorLengthMessage( MAX_LEHGTH_MESSAGE );
             };
-            
-            blockMessagePost.pubsub.publish('serverAPIcreateMessage', {  //'addMessage' 
-                content : message, 
+
+            blockMessagePost.pubsub.publish('serverAPIcreateMessage', {  //'addMessage'
+                content : message,
                 time    : new Date(),
                 user    : USER,
                 room    : ROOM
             });
 
-            input.val('');
-            input.focus();
+            clearTextEara();
+            textarea.focus();
         };
 
         function errorLengthMessage ( max ) {
@@ -59,19 +61,39 @@
             }, 3000)
         };
 
-        $('textarea[data-role="message"]').keyup(function(event) {
+        $(textarea).keyup(function(event) {
 
-            if ( event.keyCode === KEYDOWN_ENTER ) {
-
+            if ( event.ctrlKey === false && event.keyCode === KEYDOWN_ENTER ) {
                 return postMessage();
+            }
+
+            if ( event.keyCode === 8 && $(this).val().length === 0 ) return clearTextEara();
+        });
+
+        $(textarea).keydown(function(event) {
+            var val;
+
+            if ( event.ctrlKey === true && event.keyCode === KEYDOWN_ENTER ) {
+                val = $(this).val()
+                $(this).val(val + '\n');
+                this.scrollHeight;
+                this.scrollTop = this.scrollHeight;
+
+                if ( this.rows === MAX_ROWS_TEXTAREA )return
+                    this.rows += 1;
             }
         });
 
 
-        $('[data-name="postMessage"]').click(function(event) {
+        $(post).click(function(event) {
 
             postMessage();
         });
+
+        function clearTextEara () {
+            $(textarea).attr('rows', '1');
+            $(textarea).val('');
+        }
 
     };
 

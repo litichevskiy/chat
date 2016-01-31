@@ -2,22 +2,22 @@ var q_mysql = require('./q_mysql'),
 	Q = require('q'),
 	QUANTITY = 20,
 	config,
-	connection,	
+	connection,
 	createTableMessages = "CREATE TABLE table_messages("+
-		"id INT(11) AUTO_INCREMENT NOT NULL," + 
+		"id INT(11) AUTO_INCREMENT NOT NULL," +
 		"content VARCHAR(650) NOT NULL," +
-		"time VARCHAR(50) NOT NULL," + 
-		"room VARCHAR(20) NOT NULL,"+ 
+		"time VARCHAR(50) NOT NULL," +
+		"room VARCHAR(20) NOT NULL,"+
 		"user VARCHAR(30) NOT NULL,"+
 		"PRIMARY KEY(id)"+
-	")",
+	") CHARACTER SET utf8 COLLATE utf8_unicode_ci",
 	createTableUser = "CREATE TABLE users_chat("+
-		"id INT(11) AUTO_INCREMENT NOT NULL,"+  
-		"login VARCHAR(30) NOT NULL,"+ 
-		"password VARCHAR(30) NOT NULL,"+ 
-		"online VARCHAR(10) NOT NULL,"+ 
-		"PRIMARY KEY(id)"+ 
-	")",
+		"id INT(11) AUTO_INCREMENT NOT NULL,"+
+		"login VARCHAR(30) NOT NULL,"+
+		"password VARCHAR(30) NOT NULL,"+
+		"online VARCHAR(10) NOT NULL,"+
+		"PRIMARY KEY(id)"+
+	") CHARACTER SET utf8 COLLATE utf8_unicode_ci",
 	createBaseData = "CREATE DATABASE";
 
 Q.longStackSupport = true; // ????????
@@ -26,11 +26,12 @@ function initStorage ( init_config ){
 
 	config = init_config;
 
-	connection = q_mysql.createConnection({  
+	connection = q_mysql.createConnection({
 	        host     : config.host,
 	        user     : config.user,
 	        password : config.password
 	    });
+
 	connection.connect();
 
 	return checkBDExists(config, connection)
@@ -53,7 +54,7 @@ function checkBDExists (config, connection) {
 
 	return connection.query('show databases')
 	.then(function( db ) {
-		
+
 		db.forEach(function(base){
 	    	if ( base.Database === config.nameDataBase ) checkBaseData = true;
 	    });
@@ -73,7 +74,7 @@ function createBD (config, connection) {
 		.then(function(){
 			console.log( '---TABLE USER' )
 			return connection.query( createTableUser ) //config
-		})  		
+		})
 	})
 
 }
@@ -81,7 +82,7 @@ function createBD (config, connection) {
 var storage = {
 
 	getMessages : function( room, fromId ) {
-	
+
 		var list,
 			cashFromId,
 			cashQuantity;
@@ -96,16 +97,16 @@ var storage = {
 
 			if ( fromId <= 1 ){
 				fromId = 0 ; cashQuantity = cashFromId -1;
-			} 
-			
+			}
+
 			return connection.query(
 					'SELECT * FROM table_messages LIMIT'+' '+ fromId+', '+cashQuantity
 					);
-		} else{  
-		
+		} else{
+
 			var numberMessages,
 				cashFromId;
-				
+
 			return connection.query('SELECT COUNT(*) FROM table_messages')
 			.then(function(response){
 
@@ -113,19 +114,19 @@ var storage = {
 				cashFromId = numberMessages;
 				numberMessages -= QUANTITY;
 				if ( numberMessages < 0 ) numberMessages = 0;
-				
+
 				return connection.query(
 					'SELECT * FROM table_messages LIMIT'+' '+numberMessages + ',' + QUANTITY
 					)
 				.then(function(response){
 					return Q.resolve( response );
 				})
-			}) 
+			})
 		}
 	},
 
 	getUser : function( login ) {
-		
+
 		var request = 'SELECT login, password FROM users_chat WHERE login='+'"'+login+'"';
 
 		return connection.query( request )
@@ -142,7 +143,7 @@ var storage = {
 
 		return connection.query('SELECT * FROM users_chat')
 		.then(function(response){
-			
+
 			response.forEach(function(user){
 				users.push({ name : user.login, status : user.online})
 			});
@@ -156,15 +157,15 @@ var storage = {
 		.then(function(response){
 
 			for (var i = 0; i < response.length; i++){
-				
+
 				if ( user.login === response[i].login ){
 					return Q.reject( new Error('user already exists') )
 				}
-			}  
+			}
 
-			return connection.query( 
-				'INSERT INTO users_chat (login, password, online) VALUE ('+'"'+user.login+'"'+ 
-				', ' +'"'+ user.password + '"' + ', ' + '"'+ user.online + '"' + ')'  
+			return connection.query(
+				'INSERT INTO users_chat (login, password, online) VALUE ('+'"'+user.login+'"'+
+				', ' +'"'+ user.password + '"' + ', ' + '"'+ user.online + '"' + ')'
 			)
 			.then(function(){
 				return Q.resolve()
@@ -174,17 +175,17 @@ var storage = {
 
 	createMessage : function( data ) {
 		var lastIdMessage;
-		
-		return connection.query('SELECT COUNT(*) FROM table_messages') 
+
+		return connection.query('SELECT COUNT(*) FROM table_messages')
 		.then(function(response){
-			
-			lastIdMessage = response[0]['COUNT(*)']; 
+
+			lastIdMessage = response[0]['COUNT(*)'];
 			data.id = lastIdMessage;
-			
+
 			return connection.query(
 				'INSERT INTO table_messages (content, time, room, user) VALUE ('+
 				'"'+data.content+'"'+', '+'"'+data.time+'"'+', '+'"'+data.room+'"'
-				+', '+'"'+data.user+'"'+')' 
+				+', '+'"'+data.user+'"'+')'
 			)
 			.then(function(response){
 				return Q.resolve( data );
@@ -193,7 +194,7 @@ var storage = {
 	},
 
 	setStatus : function ( login, status ) {
-		
+
 		var request = 'SELECT login, password FROM users_chat WHERE login='+'"'+login+'"',
 			user;
 		return connection.query( request )
@@ -202,7 +203,7 @@ var storage = {
 				return Q.reject( new StorageError('STORAGE: no such user "' + login + '"') );
 			}
 			user = response[0];
-				
+
 			var request = 'UPDATE users_chat SET online='+'"'+status+'" '+'WHERE login="'+login+'"';
 			return connection.query( request )
 			.then(function(response){
@@ -215,7 +216,7 @@ var storage = {
 	Error : StorageError
 };
 
-function StorageError ( text ) { 
+function StorageError ( text ) {
 	this.message = text;
 }
 

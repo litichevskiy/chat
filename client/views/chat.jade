@@ -14,24 +14,26 @@ html
         script(src="/js/jade.min.js")
         script(src='/socket.io/socket.io.js')
     body
-        .container 
+        .container
             .row
                 .col-md-3.col-sm-3.col-lg-3.col-xs-3
                     .column(data-role='block_users')
                 .col-md-9.col-sm-9.col-lg-9.col-xs-9
-                    .column(data-role='block_message_content')
-                        audio(data-role = 'ringtoneMessage' src = src="/ringtone/rington_newMessage_1.mp3" type="audio/mpeg")
-                        div(data-role='load').text-center.text-primary loading ...
+                    .selection_panel
                         span(data-role='new message') new message
-                        div(data-role='sound') 
-                            label 
+                        div(data-role='sound')
+                            label
                                 span.sound sound
-                                input(data-role='sound' type='checkbox' checked) 
+                                input(data-role='sound' type='checkbox' checked)
                         button.btn.btn-warning(data-role='exit') Exit
+                        audio(data-role = 'ringtoneMessage' src = src="/ringtone/rington_newMessage_1.mp3" type="audio/mpeg")
+
+                    .column(data-role='block_message_content')
+                        div(data-role='load').text-center.text-primary loading ...
                     .column(data-role='block_message')
                         .form-group
                             span.h2.text-danger.warning-message
-                            textarea.form-control(data-role='message' placeholder='Message text' autofocus )
+                            textarea.form-control(data-role='message' rows=1 placeholder='Message text' autofocus )
                             button.btn.btn-info(data-name='postMessage') Post
 
         script(src="/js/PubSub.js")

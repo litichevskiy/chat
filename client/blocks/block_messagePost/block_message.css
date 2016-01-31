@@ -1,24 +1,25 @@
 .form-group{
-    position:relative;
     height:inherit;
-	width: 96%;
-	margin-left: 2%;
-	margin-top: 1%;
+	width: 100%;
 	margin-bottom: 0;
 }
 button[data-name="postMessage"]{
-    position: absolute;
-    right:1em;
+    position: relative;
+    left:0;
+    bottom: 0;
 	outline: none;
 	margin: 1%;
 }
 textarea::-webkit-input-placeholder{
-	font-size: 1.5em;
-	padding: 1%;
+	font-size: 1em;
 }
 textarea[data-role="message"]{
+	position:relative;
+	bottom:-2em;
+	right:-3em;
 	font-size: 1.5em;
-    width: 98%;
-    height:200%;
-    cursor: text;
+    width: 90%;
+    margin-left: 0.5em;
+    resize:none;
+    padding:0.5em;
 }

@@ -2,6 +2,11 @@
 
 
 	var REGEXP_TIME = /.+?\d\d\d\d\b/,
+		ROOM,
+		USER,
+		DOWN = 40,
+		TODAY = 'Today',
+		TIMER_CHECK_TIME = 1000 * 60 * 60, // 1 hours in ms
 		parentBlockMessageContent = $('.column')[1],
 		inProgress = $('[data-role="load"]')[0],
 		announcement = $('[data-role="new message"]')[0],
@@ -11,9 +16,6 @@
 		blockMessageContent = $('div[data-role="block_message_content"]')[0],
 		render,
 		resCheck,
-		ROOM,
-		USER,
-		DOWN = 40,
 		countNewMessage = 0,
 		heightContent,
 		measureHeightContent = true,
@@ -21,7 +23,8 @@
 		heightUnReadMessage = [],
 		lastMessage,
 		heightListMessage,
-		heightNewMessage;
+		heightNewMessage,
+		new_Day;
 
 	var theBlock;
 
@@ -32,7 +35,7 @@
 
 		var defer = $.Deferred();
 
-		$.get('/views/messageTemplate.jade') 
+		$.get('/views/messageTemplate.jade')
 		.then(function( template ){
 
 			render = jade.compile( template )
@@ -45,7 +48,7 @@
 		return defer.promise();
 	};
 
-	// singleton 
+	// singleton
 	function BlockMessageContent ( htmlElement, pubsub ) {
 
 		if ( theBlock ) {
@@ -57,6 +60,9 @@
 		$(htmlElement).append(this.container)[0];
 
 		this.pubsub = pubsub;
+
+		getDateSeparator.createSeparatorDateNow( this.container );
+		getDateSeparator.setLiToday( this.container );
 	};
 
 
@@ -70,17 +76,19 @@
 			hours = time.getHours();
 			( minutes < 10 ) ? minutes = '0' + minutes : minutes;
 			( hours < 10 ) ? hours = '0' + hours : hours;
-		return hours + ' : ' + minutes; 
+		return hours + ' ' + minutes;
 	};
 
 
 	var getDateSeparator = function () {
 
 		var storageSeparator = {
-			year : 0,
-			month : 0,
-			dayMonth : 0,
-			liDate : ''
+			year : (new Date).getFullYear(),
+			month : (new Date).getMonth(),
+			dayMonth : (new Date).getDate(),
+			hours : (new Date).getHours(),
+			liToday : null,
+			liDateNow : ''
 		};
 
 		return {
@@ -105,15 +113,47 @@
 					storageSeparator.year = year;
 					storageSeparator.month = month;
 					storageSeparator.dayMonth = dayMonth;
-					return storageSeparator.liDate;
+					return storageSeparator.liToday;
 				}
-				return storageSeparator.liDate;	
+				return storageSeparator.liToday || storageSeparator.liDateNow;
 			},
 
 			createNewSeparator : function ( o ) {
-				storageSeparator.liDate = $('<li data-time="'+o.year+','+o.month+','+ o.dayMonth+'"></li>');
-				storageSeparator.liDate.html( get_Date( o.date ) );
-				$(o.container).prepend( storageSeparator.liDate );
+				storageSeparator.liToday = $(
+					'<li class=separate data-time="'+o.year+','+o.month+','+ o.dayMonth+'"></li>'
+					);
+				storageSeparator.liToday.html( get_Date( o.date ) );
+				$(o.container).prepend( storageSeparator.liToday );
+			},
+
+			createSeparatorDateNow : function ( container ) {
+
+				var now = new Date(),
+					year = now.getFullYear(),
+					month = now.getMonth(),
+					dayMonth = now.getDate();
+
+				storageSeparator.liDateNow = $(
+					'<li class=separate data-time="'
+					+year+','+month+','+ dayMonth+'"data-day="'+get_Date( now )+'""></li>'
+					);
+				storageSeparator.liDateNow.html( TODAY ); //get_Date( now.toString()
+				$(container).append( storageSeparator.liDateNow );
+				new_Day = false;
+			},
+
+			setLiToday : function ( container ) {
+				var container = container
+
+				setInterval(function(){
+					var hours = ( new Date() ).getHours();
+					if ( hours === 0 ) {
+						new_Day = true;
+						$(storageSeparator.liDateNow).html(
+							( storageSeparator.liDateNow[0] ).dataset.day
+						)
+					}
+				}, TIMER_CHECK_TIME);
 			}
 		}
 	}();
@@ -124,6 +164,8 @@
 		var newHtml = '',
 			userName = data.user;
 
+			if ( new_Day ) getDateSeparator.createSeparatorDateNow( $(this.container) );
+
 			newHtml = render({
 
 				id      : data.id,
@@ -133,20 +175,17 @@
 			});
 
 		if ( userName === USER ) {
-
 			$(this.container).append(newHtml);
 			theBlock.scrollInBottom();
 
 		} else {
 
 			rememberHeightContent();
-			
-			lastMessage = $(this.container).find('li:last');
-			heightListMessage = $(this.container).height()
+
 			$(this.container).append(newHtml);
-		
-			heightNewMessage = ( $(lastMessage).next() ).height()
-			heightUnReadMessage.push( heightListMessage - heightNewMessage ); 
+			// heightListMessage = $(this.container)
+			// heightUnReadMessage.push()
+			// lastMessage = $(this.container).find('li:last');
 
 			if ( $(this.container).height() >= $(parentBlockMessageContent).height() ){
 
@@ -160,7 +199,6 @@
 
 		var listMassage = '',
 			dateSeparator,
-			html = $(this.container).html(),
 			that = this;
 
 			list.reverse();
@@ -182,7 +220,6 @@
 	};
 
 	BlockMessageContent.prototype.scrollInBottom = function ( ) {
-
 		parentBlockMessageContent.scrollTop = parentBlockMessageContent.scrollHeight;
 	};
 
@@ -235,20 +272,26 @@
     };
 
 	function messageRingtone () {
-	
+
 		if ( $(sound).prop('checked') ) ringtone.play();
 	};
 
-	// function updateHtmlAnnouncement(){
-	// 	countNewMessage -= 1;
-    		
- //    	$(announcement).html( htmlAnnouncement + ' ' + countNewMessage );
- //    	heightUnReadMessage.splice( 0, 1 )
- //    	if ( heightUnReadMessage.length === 1 ){
- //    		countNewMessage = 0;
- //    		heightUnReadMessage.splice( 0, 1 )
- //    		$(announcement).hide('slow');
- //    	}
+	// function updateHtmlAnnouncement( scroll_now ){
+
+	// 	for ( var i = 0; i < heightUnReadMessage.length; i++ ) {
+
+	// 		if ( scroll_now >= heightUnReadMessage[0] ){
+	// 			heightUnReadMessage.splice( 0, 1 );
+	// 			countNewMessage -= 1;
+	// 			$(announcement).html( htmlAnnouncement + ' ' + countNewMessage );
+	// 		}
+
+	// 		if ( heightUnReadMessage.length === 1 ) {
+	// 			countNewMessage = 0;
+	// 			heightUnReadMessage.splice( 0, 1 );
+	// 			$(announcement).hide('slow');
+	// 		}
+	// 	}
 	// }
 
     $(blockMessageContent).scroll(function(event){
@@ -258,11 +301,11 @@
 			loadHistoryMessage();
             return;
         }
-        
-    	if ( this.scrollTop >= heightUnReadMessage[0] ){
-    		$(announcement).hide('slow');
-    		// updateHtmlAnnouncement();
-    	}
+
+    	// if ( this.scrollTop >= heightUnReadMessage[0] ){
+    	// 	$(announcement).hide('slow');
+    	// 	// updateHtmlAnnouncement( this.scrollTop );
+    	// }
     });
 
 	$(announcement).click(function(event) {
@@ -273,11 +316,11 @@
 		heightContent = 0;
 		$(announcement).hide('slow');
 	});
-	
-	$(document).keydown(function(event) {
-		
-		if ( event.keydown === DOWN ) return updateHtmlAnnouncement();
-	});
+
+	// $(document).keydown(function(event) {
+
+	// 	if ( event.keydown === DOWN ) return updateHtmlAnnouncement();
+	// });
 
 	exports.blockMessageContentInit = blockMessageContentInit;
 

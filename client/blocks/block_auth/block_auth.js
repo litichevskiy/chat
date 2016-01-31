@@ -6,7 +6,28 @@
 		OK = 'success',
 		TEXT_MESSAGE = 'НАС О ВАС НЕ ПРЕДУПРЕДИЛИ АВТОРИЗИРУЙТЕСЬ',
 		USER_ALREADY_EXISTS = 'user already exists',
-		USER_EXISTS = 403;
+		USER_EXISTS = 403,
+		REGEXP_BAD_LOGIN = /[\[\]\{\}\;\.\-\/\^\+\:\~\=\!\*\<\>\$\#]/,
+		MIN_LENGTH_LOGIN = 3;
+
+	$(log).blur(function(event){
+		var logValue = this.value;
+
+		if ( logValue.match( REGEXP_BAD_LOGIN ) ) {
+			$(message_to_user).html( 'Придумай буквенный логин' );
+			clear();
+			clearInput( [log] );
+		}
+	});
+
+	$(log).change(function(event){
+		var logValue = this.value;
+
+		if ( logValue.length < MIN_LENGTH_LOGIN ) {
+			$(message_to_user).html( 'minimum "'+MIN_LENGTH_LOGIN+'" simbol' );
+			clear();
+		}
+	});
 
 	function clearInput( int ) {
 		$(int).each(function(index, el) {

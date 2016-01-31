@@ -78,8 +78,8 @@ module.exports = function( storage, pubsub ) {
 
 		},
 
-		getAllUsers : function ( req, res, next ) { 
-        			
+		getAllUsers : function ( req, res, next ) {
+
 			storage.getAllUsers()
 			.then(function(list){
 				res.status( 200 );
