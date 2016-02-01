@@ -4,9 +4,9 @@
 	margin-bottom: 0;
 }
 button[data-name="postMessage"]{
-    position: relative;
+    position: absolute;
     left:0;
-    bottom: 0;
+    bottom: 1em;
 	outline: none;
 	margin: 1%;
 }
@@ -14,12 +14,12 @@ textarea::-webkit-input-placeholder{
 	font-size: 1em;
 }
 textarea[data-role="message"]{
-	position:relative;
-	bottom:-2em;
-	right:-3em;
+	position:absolute;
+	bottom:1em;
+	right:1em;
 	font-size: 1.5em;
     width: 90%;
     margin-left: 0.5em;
     resize:none;
-    padding:0.5em;
+    padding:0.2em;
 }
