@@ -10,20 +10,18 @@
 		parentBlockMessageContent = $('.column')[1],
 		inProgress = $('[data-role="load"]')[0],
 		announcement = $('[data-role="new message"]')[0],
-		htmlAnnouncement = $(announcement).html(),
 		ringtone = $('[data-role = "ringtoneMessage"]')[0],
 		sound = $('input[data-role="sound"]')[0],
 		blockMessageContent = $('div[data-role="block_message_content"]')[0],
 		render,
-		resCheck,
+		bottomBlockMessage = blockMessageContent.getBoundingClientRect(),
 		countNewMessage = 0,
 		heightContent,
 		measureHeightContent = true,
 		topHistory = false,
-		heightUnReadMessage = [],
+		storageUnReadMessage = [],
 		lastMessage,
-		heightListMessage,
-		heightNewMessage,
+		unread_message = false,
 		new_Day;
 
 	var theBlock;
@@ -137,7 +135,7 @@
 					'<li class=separate data-time="'
 					+year+','+month+','+ dayMonth+'"data-day="'+get_Date( now )+'""></li>'
 					);
-				storageSeparator.liDateNow.html( TODAY ); //get_Date( now.toString()
+				storageSeparator.liDateNow.html( TODAY );
 				$(container).append( storageSeparator.liDateNow );
 				new_Day = false;
 			},
@@ -181,11 +179,10 @@
 		} else {
 
 			rememberHeightContent();
-
 			$(this.container).append(newHtml);
-			// heightListMessage = $(this.container)
-			// heightUnReadMessage.push()
-			// lastMessage = $(this.container).find('li:last');
+			lastMessage = $(this.container).find('li[data-role="message"]:last')[0];
+			storageUnReadMessage.push( lastMessage );
+			unread_message = true;
 
 			if ( $(this.container).height() >= $(parentBlockMessageContent).height() ){
 
@@ -227,7 +224,7 @@
 
 		$(announcement).show('slow');
 		countNewMessage += 1
-		$(announcement).html( htmlAnnouncement + ' ' + countNewMessage );
+		$(announcement).html( countNewMessage );
 	};
 
 	function rememberHeightContent () {
@@ -276,51 +273,47 @@
 		if ( $(sound).prop('checked') ) ringtone.play();
 	};
 
-	// function updateHtmlAnnouncement( scroll_now ){
 
-	// 	for ( var i = 0; i < heightUnReadMessage.length; i++ ) {
+	function updateHtmlAnnouncement( scroll_now ){
+		var currentMessage;
 
-	// 		if ( scroll_now >= heightUnReadMessage[0] ){
-	// 			heightUnReadMessage.splice( 0, 1 );
-	// 			countNewMessage -= 1;
-	// 			$(announcement).html( htmlAnnouncement + ' ' + countNewMessage );
-	// 		}
+		for ( var i = 0; ; i++ ) {
 
-	// 		if ( heightUnReadMessage.length === 1 ) {
-	// 			countNewMessage = 0;
-	// 			heightUnReadMessage.splice( 0, 1 );
-	// 			$(announcement).hide('slow');
-	// 		}
-	// 	}
-	// }
+			currentMessage = storageUnReadMessage[0].getBoundingClientRect()
+
+			if ( currentMessage.bottom  <= bottomBlockMessage.bottom ) {
+
+				storageUnReadMessage.splice( 0, 1);
+				countNewMessage -= 1;
+				$(announcement).html( countNewMessage );
+
+				if ( storageUnReadMessage.length === 0 ) {
+
+					$(announcement).hide('slow');
+					unread_message = false;
+					countNewMessage = 0;
+					return;
+				}
+				continue
+
+			} else return
+		}
+	};
 
     $(blockMessageContent).scroll(function(event){
 
-        if (this.scrollTop === 0 && !topHistory ) {
-
-			loadHistoryMessage();
-            return;
-        }
-
-    	// if ( this.scrollTop >= heightUnReadMessage[0] ){
-    	// 	$(announcement).hide('slow');
-    	// 	// updateHtmlAnnouncement( this.scrollTop );
-    	// }
+        if (this.scrollTop === 0 && !topHistory) return loadHistoryMessage();
+    	if ( unread_message ) return updateHtmlAnnouncement();
     });
 
 	$(announcement).click(function(event) {
 
 		parentBlockMessageContent.scrollTop = heightContent;
 		measureHeightContent = true;
-		countNewMessage = 0; // 1
+		countNewMessage = 0;
 		heightContent = 0;
 		$(announcement).hide('slow');
 	});
-
-	// $(document).keydown(function(event) {
-
-	// 	if ( event.keydown === DOWN ) return updateHtmlAnnouncement();
-	// });
 
 	exports.blockMessageContentInit = blockMessageContentInit;
 

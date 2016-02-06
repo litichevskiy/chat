@@ -1,6 +1,6 @@
 module.exports = function( storage, pubsub ) {
 
-	var MAX_LEHGTH_MESSAGE = 500;
+	var MAX_LEHGTH_MESSAGE = 1000;
 
 	return {
 

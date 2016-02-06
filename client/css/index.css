@@ -1,6 +1,12 @@
+html,body{
+	width:100%;
+	height:100%;
+}
 .container{
 	position: absolute;
-	min-width: 0;
+	top: 0;
+	left: 0;
+	/*min-width: 0;*/
 	width:100%;
 	height: 100%;
 	overflow:hidden;
@@ -17,14 +23,14 @@ div[data-role='block_users']{
 	overflow: auto;
 }
 div[data-role='block_message_content']{
-	height: 70%;
 	border-bottom: 1px solid grey;
+	height:100%;
 	overflow: auto;
 }
 div[data-role='block_message']{
 	width: 100%;
-	height:30%;
-	overflow: auto;
+	/*overflow: auto;*/
+	height:100%;
 }
 button[data-role="openChat"],
 button[data-role="authUser"]{
@@ -37,4 +43,24 @@ button[data-role="authUser"]{
 button[data-role="openChat"],
 button[data-role="authUser"]:focus{
 	outline:none;
+}
+.tableMessage{
+	display:table;
+	height: 100%;
+}
+.rowSelect{
+	display: table-row;
+	height:0;
+}
+.cellSelect,
+.cellMessagePost,
+.cellMessageContent{
+	display:table-cell;
+}
+.rowMessageContent,
+.rowMessagePost{
+	display:table-row;
+}
+.rowMessagePost{
+	height:15%;
 }

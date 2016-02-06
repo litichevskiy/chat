@@ -3,8 +3,8 @@
     var USER     = login,
         ROOM     = 'room_1',
         pubsub   = new PubSub;
-            
-        serverAPI.setPubsub( pubsub ); 
+
+        serverAPI.setPubsub( pubsub );
 
     $.when(
         blockMessageContentInit( ROOM ),
@@ -12,7 +12,7 @@
         blockUsersInit( USER )
     )
     .then(function( BlockMessage, socket, BlockUsers ){
-        
+
         blockMessagePostInit(
             pubsub,
             $('[data-role="block_message"]')[0],
@@ -36,6 +36,7 @@
         .then(function( res ){
             blockMessageContent.addMessages( res );
             blockMessageContent.scrollInBottom();
+            checkUserAgent();
         })
         .fail(function(err){
             console.log( err );
@@ -52,12 +53,30 @@
         blockUsers.pubsub.subscribe('listUsers', blockUsers.viewUsers.bind( blockUsers ));
         blockUsers.pubsub.subscribe('userOnline', blockUsers.checkUserInList.bind( blockUsers ));////////
         blockUsers.pubsub.subscribe('userOffline', blockUsers.offlineState.bind( blockUsers ));
-        
+
         $('[data-role="exit"]').click(function(event) {
 
             window.location = '/login';
             serverAPI.clearCookie()
         });
+
+        function checkUserAgent (){
+            var regExp = /Firefox/,
+                userBrauser;
+
+            userBrauser = window.navigator.userAgent;
+
+            if( regExp.test( userBrauser ) ) return replaceHeightBlockMessages();
+                return;
+        };
+
+        function replaceHeightBlockMessages () {
+            var blockMessage = $('.column[data-role="block_message_content"]'),
+                containerHeight = $('.container').height() - 10,
+                blockPostHeight = $('.column[data-role="block_message"]').height();
+
+            $(blockMessage).height( containerHeight - blockPostHeight );
+        };
 
     })
     .fail(function(err){

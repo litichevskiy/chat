@@ -3,14 +3,15 @@ html
     head
         title chat
         meta(http-equiv="content-type", content="text/HTML;charset=UTF-9")
-        link(rel="stylesheet", href="/css/bootstrap.min.css")
+        link(rel="stylesheet", href="/bootstrap/css/bootstrap.min.css")
         link(rel="stylesheet", href='/css/index.css')
         link(rel="stylesheet", href='/blocks/block_messagePost/block_message.css')
         link(rel="stylesheet", href='/blocks/block_message_content/block_message_content.css')
         link(rel="stylesheet", href="/blocks/block_users/block_users.css" )
+        //- link(rel="shortcut icon", href="your_image_path_and_name.ico")
 
         script(src="/js/jquery.min.js")
-        script(src="/js/bootstrap.min.js")
+        script(src="/bootstrap/js/bootstrap.min.js")
         script(src="/js/jade.min.js")
         script(src='/socket.io/socket.io.js')
     body
@@ -18,23 +19,30 @@ html
             .row
                 .col-md-3.col-sm-3.col-lg-3.col-xs-3
                     .column(data-role='block_users')
-                .col-md-9.col-sm-9.col-lg-9.col-xs-9
-                    .selection_panel
-                        span(data-role='new message') new message
-                        div(data-role='sound')
-                            label
-                                span.sound sound
-                                input(data-role='sound' type='checkbox' checked)
-                        button.btn.btn-warning(data-role='exit') Exit
-                        audio(data-role = 'ringtoneMessage' src = src="/ringtone/rington_newMessage_1.mp3" type="audio/mpeg")
-
-                    .column(data-role='block_message_content')
-                        div(data-role='load').text-center.text-primary loading ...
-                    .column(data-role='block_message')
-                        span.text-danger.warning-message
-                        .form-group
-                            textarea.form-control(data-role='message' rows=1 placeholder='Message text' autofocus )
-                            button.btn.btn-info(data-name='postMessage') Post
+                .tableMessage.col-md-9.col-sm-9.col-lg-9.col-xs-9
+                    .rowSelect
+                        .cellSelect
+                            .selection_panel
+                                span.glyphicon.glyphicon-comment(data-role='new message')
+                                div(data-role='sound')
+                                    label
+                                        input(data-role='sound' type='checkbox' checked)
+                                        span.sound.glyphicon.glyphicon-volume-up
+                                        span.soundOf.glyphicon.glyphicon-volume-off
+                                button.btn.btn-warning(data-role='exit') Exit
+                                audio(data-role = 'ringtoneMessage' src = src="        /ringtone/rington_newMessage_1.mp3" type="audio/mpeg")
+                    .rowMessageContent
+                        .cellMessageContent
+                            .column(data-role='block_message_content')
+                                div(data-role='load').text-center.text-primary loading ...
+                    .rowMessagePost
+                        .cellMessagePost
+                            .column(data-role='block_message')
+                                span.text-danger.warning-message
+                                .form-group
+                                    textarea.form-control(data-role='message' rows=1 autofocus )
+                                    button.btn.btn-default(data-name='postMessage')
+                                        span.glyphicon.glyphicon-send
 
         script(src="/js/PubSub.js")
         script(src="/js/serverAPI.js")

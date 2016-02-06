@@ -4,8 +4,8 @@
         REGEXP_TIME        = /.+?:\d\d\b/,
         REGEXP_CHECK_EMPTY_STRING = /^[\t\s\n\r]+$/,
         KEYDOWN_ENTER      = 13,
-        MAX_LEHGTH_MESSAGE = 500,
-        MAX_ROWS_TEXTAREA  = 2;
+        MAX_LEHGTH_MESSAGE = 1000,
+        MAX_ROWS_TEXTAREA  = 20;
 
     function blockMessagePostInit ( pubsub, container, socket, room, user ) {
 

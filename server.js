@@ -4,33 +4,34 @@ var config = require('./config.json'),
 
 initStorage( config )
 .then(function(storage){
-    
+
     console.log('SERVER: OK')
-    var express = require('express'), 
+    var express = require('express'),
         http = require('http'),
         Q = require('q'),
         pubsub = new (require('./pubsub')),
         apiv1 = require('./api.v1.js')( storage, pubsub ),
         auth = require('./auth.js')( storage, express.cookieParser(), pubsub ),
         path = require('path');
-    
+
         app = express();
-    
-    
+
+
     app.use(express.bodyParser());
     app.use(express.cookieParser());
     app.use(app.router);
-    
-    
+
+
     app.set('views', __dirname + '/client/views/');
     app.set('view engine', 'jade');
-    
-    
+
+
     app.use('/css', express.static( path.join(__dirname, '/client/css') ));
     app.use('/blocks', express.static( path.join(__dirname, '/client/blocks') ));
     app.use('/js', express.static( path.join(__dirname, '/client/js') ));
     app.use('/views', express.static( path.join(__dirname, '/client/views') ));
     app.use('/ringtone', express.static( path.join(__dirname, '/client/ringtone') ));
+    app.use('/bootstrap', express.static( path.join(__dirname, '/client/bootstrap') ));
 
 
     app.get('/', auth.check, function( req, res, next ){
@@ -42,8 +43,8 @@ initStorage( config )
     app.get('/template', function( req, res, next ){
         res.render('messageTemplate.jade')
     });
-    
-    
+
+
     app.post( '/login/create', auth.create, auth.login );
     app.post( '/login', auth.login );
     app.get(  '/api/*', auth.check );
@@ -52,14 +53,14 @@ initStorage( config )
     app.post( '/api/v1/message', apiv1.createMessage );
     app.get(  '/api/v1/clearCookie', apiv1.clear );
     app.get(  '/api/v1/getAllUsers', apiv1.getAllUsers );
-    
+
     var server = http.createServer(app);
         server.listen(config.serverPort, function(){
         console.log('Server is strarted. at port ' + config.serverPort);
     });
-    
+
     require('./socket.js')(server, pubsub);
-    
+
     // require('./user.js')(storage);
     pubsub.subscribe( 'userConnect', auth.setUserStatusOnline );
     pubsub.subscribe( 'userDisconnect', auth.setUserStatusOfline );

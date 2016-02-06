@@ -4,22 +4,34 @@
 	margin-bottom: 0;
 }
 button[data-name="postMessage"]{
-    position: absolute;
-    left:0;
-    bottom: 1em;
 	outline: none;
-	margin: 1%;
+	margin: 2% 0.5% 0 0;
+	width:5%;
+	height:40%;
+	padding:0;
+	background-color: #C1EBFF;
+	border: none;
+}
+span.glyphicon{
+	font-size: 150%;
+	color: #60AFF3;
+}
+.btn:focus,.btn:active {
+   	outline: none !important;
+ 	background-color: #C1EBFF;
+ 	border: none;
+}
+button[data-name="postMessage"]:hover{
+	background-color: #C1EBFF;
+	border: none;
 }
 textarea::-webkit-input-placeholder{
 	font-size: 1em;
 }
 textarea[data-role="message"]{
-	position:absolute;
-	bottom:1em;
-	right:1em;
 	font-size: 1.5em;
-    width: 90%;
-    margin-left: 0.5em;
+    width: 93%;
     resize:none;
-    padding:0.2em;
+    float: right;
+    margin:2% 1% 0 0;
 }
