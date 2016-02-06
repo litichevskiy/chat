@@ -1,4 +1,5 @@
 li( data-role='message' data-id_message = id )
     time.small.text-muted.user_date #{time}
-    span.text-info.user_name #{name}
-    span.lead.message_content #{content}
+    span.text-info.user_name(data-name = dataName ) #{name}
+    p.lead.message_content #{content}
+    //- span.lead.message_content #{content}

@@ -2,6 +2,7 @@
 
 
 	var REGEXP_TIME = /.+?\d\d\d\d\b/,
+		SEARCH_LINKS = /https?:\/\/[-a-z0-9_:@&?=+,.!\/~+%$]+/gi,
 		ROOM,
 		USER,
 		DOWN = 40,
@@ -156,6 +157,14 @@
 		}
 	}();
 
+	function func ( listMassage, user ){
+		var userName = $(listMassage).find('.user_name:last')[0].dataset.name;
+		debugger;
+		if ( userName === USER && user === USER ) return '';
+			return user;
+
+	};
+
 
 	BlockMessageContent.prototype.addMessage = function( data ) {
 
@@ -166,11 +175,17 @@
 
 			newHtml = render({
 
-				id      : data.id,
-				name    : data.user,
-				content : data.content,
-				time    : getHoursAndMinutes( data.time )
+				id       : data.id,
+				name     : data.user,//func( this.container, data.user ),
+				dataName : data.user,
+				content  : data.content,
+				time     : getHoursAndMinutes( data.time )
 			});
+
+			if ( checkPresenceLink( newHtml ) ) {
+
+				newHtml = displayLinks( newHtml );
+			}
 
 		if ( userName === USER ) {
 			$(this.container).append(newHtml);
@@ -210,10 +225,33 @@
 				name    : data.user,
 				content : data.content,
 				time    : getHoursAndMinutes(data.time)
-			})
+			});
 
-			$( dateSeparator ).after( listMassage );
+			if ( checkPresenceLink( listMassage ) ) {
+
+				var newHtml = displayLinks( listMassage );
+				$( dateSeparator ).after( newHtml );
+
+			} else {
+
+				$( dateSeparator ).after( listMassage );
+			}
+
 		});
+	};
+
+	function checkPresenceLink( messageComtent ) {
+		return SEARCH_LINKS.test( messageComtent );
+	};
+
+
+	function displayLinks ( messageComtent ) {
+		var newHtml;
+		newHtml = messageComtent.replace( SEARCH_LINKS, function( link ){
+
+			return '<span><a target="_blank" href="'+link+'">'+link+'</a></span>';
+		});
+		return newHtml;
 	};
 
 	BlockMessageContent.prototype.scrollInBottom = function ( ) {
@@ -314,6 +352,7 @@
 		heightContent = 0;
 		$(announcement).hide('slow');
 	});
+
 
 	exports.blockMessageContentInit = blockMessageContentInit;
 

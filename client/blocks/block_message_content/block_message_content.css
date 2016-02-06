@@ -21,8 +21,8 @@ button[data-role="exit"]{
 	font-weight: bold;
 }
 .message_content{
-	padding-left: 2em;
-	display:block;
+	/*padding-left: 2em;
+	display:block;*/
 	word-wrap: break-word;
 	word-break: break-all;
 	white-space: inherit;

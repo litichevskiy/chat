@@ -2,21 +2,47 @@
 
     var USER     = login,
         ROOM     = 'room_1',
+        FIREFOX,
         pubsub   = new PubSub;
 
         serverAPI.setPubsub( pubsub );
 
+        function checkUserAgent (){
+            var regExp = /Firefox/,
+                userBrauser;
+
+            userBrauser = window.navigator.userAgent;
+
+            if( regExp.test( userBrauser ) ) {
+
+                replaceHeightBlockMessages();
+                FIREFOX = 'Firefox';
+                return
+            }
+                return;
+        };
+
+
+        function replaceHeightBlockMessages () {
+            var blockMessage = $('.column[data-role="block_message_content"]'),
+                containerHeight = $('.container').height() - 10,
+                blockPostHeight = $('.column[data-role="block_message"]').height();
+
+            $(blockMessage).height( containerHeight - blockPostHeight );
+        };
+
     $.when(
         blockMessageContentInit( ROOM ),
         socketInit({ pubsub : pubsub, io : io }),
-        blockUsersInit( USER )
+        blockUsersInit( USER ),
+        checkUserAgent()
     )
     .then(function( BlockMessage, socket, BlockUsers ){
-
+        debugger;
         blockMessagePostInit(
             pubsub,
             $('[data-role="block_message"]')[0],
-            socket, ROOM, USER
+            socket, ROOM, USER, replaceHeightBlockMessages, FIREFOX
         );
 
         var blockMessageContent = new BlockMessage(
@@ -60,23 +86,7 @@
             serverAPI.clearCookie()
         });
 
-        function checkUserAgent (){
-            var regExp = /Firefox/,
-                userBrauser;
-
-            userBrauser = window.navigator.userAgent;
-
-            if( regExp.test( userBrauser ) ) return replaceHeightBlockMessages();
-                return;
-        };
-
-        function replaceHeightBlockMessages () {
-            var blockMessage = $('.column[data-role="block_message_content"]'),
-                containerHeight = $('.container').height() - 10,
-                blockPostHeight = $('.column[data-role="block_message"]').height();
-
-            $(blockMessage).height( containerHeight - blockPostHeight );
-        };
+        window.onresize = checkUserAgent;
 
     })
     .fail(function(err){

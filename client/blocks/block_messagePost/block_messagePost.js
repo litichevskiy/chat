@@ -5,14 +5,15 @@
         REGEXP_CHECK_EMPTY_STRING = /^[\t\s\n\r]+$/,
         KEYDOWN_ENTER      = 13,
         MAX_LEHGTH_MESSAGE = 1000,
-        MAX_ROWS_TEXTAREA  = 20;
+        MAX_ROWS_TEXTAREA  = 10;
 
-    function blockMessagePostInit ( pubsub, container, socket, room, user ) {
+    function blockMessagePostInit ( pubsub, container, socket, room, user, replaceHeightBlockMessages, Firefox ) {
 
         var textarea  = $('textarea'),
             socket = socket,
             ROOM   = room,
             USER   = user,
+            FIREFOX = Firefox,
             post = $('[data-name="postMessage"]');
 
             blockMessagePost = new BlockMessagePost( pubsub, container );
@@ -67,7 +68,16 @@
                 return postMessage();
             }
 
-            if ( event.keyCode === 8 && $(this).val().length === 0 ) return clearTextEara();
+            if ( event.keyCode === 8 && $(this).val().length === 0 ) {
+
+                clearTextEara();
+
+                if ( FIREFOX ) {
+
+                    replaceHeightBlockMessages();
+                }
+                return;
+            }
         });
 
         $(textarea).keydown(function(event) {
@@ -81,6 +91,11 @@
 
                 if ( this.rows === MAX_ROWS_TEXTAREA )return
                     this.rows += 1;
+
+                    if ( FIREFOX ) {
+                        replaceHeightBlockMessages();
+
+                    }
             }
         });
 

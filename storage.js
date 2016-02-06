@@ -27,9 +27,10 @@ function initStorage ( init_config ){
 	config = init_config;
 
 	connection = q_mysql.createConnection({
-	        host     : config.host,
+	        host     : config.mysqlHost || 'localhost',
 	        user     : config.user,
-	        password : config.password
+	        password : config.password,
+	        port     : config.mysqlPort || 3306
 	    });
 
 	connection.connect();
