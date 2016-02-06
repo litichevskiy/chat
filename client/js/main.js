@@ -38,7 +38,7 @@
         checkUserAgent()
     )
     .then(function( BlockMessage, socket, BlockUsers ){
-        debugger;
+
         blockMessagePostInit(
             pubsub,
             $('[data-role="block_message"]')[0],

@@ -9,24 +9,22 @@ button[data-role="exit"]{
 	margin-top: 2%;
 }
 .list_message li[data-id_message]{
-	padding-bottom: 0.5em;
+	/*padding-bottom: 0.5em;*/
 }
 .user_date{
 	font-size: small;
 	margin-bottom: -4px;
 }
 .user_name{
-	margin-left: 0.5em;
-	margin-bottom: -5px;
-	font-weight: bold;
+	margin-right: 1em;
+	font-family: cursive;
 }
 .message_content{
-	/*padding-left: 2em;
-	display:block;*/
 	word-wrap: break-word;
 	word-break: break-all;
 	white-space: inherit;
-	color:#333;
+	color: #464545;
+	/*color:#333;*/
 }
 div[data-role="load"]{
 	display: none;
@@ -68,6 +66,7 @@ span.lead{
 	justify-content: flex-end;
 	height: 2.5em;
 	opacity: 0.3;
+	z-index: 1;
 }
 .selection_panel:hover{
 	opacity:1;
@@ -89,4 +88,10 @@ input:not(:checked) ~ .sound {
 }
 input:checked ~ .soundOf {
 	display: none;
+}
+.block_userName_and_content{
+	width: 95%;
+	position: relative;
+	right: -5%;
+	top: -1.3em;
 }

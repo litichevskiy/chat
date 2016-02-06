@@ -157,12 +157,11 @@
 		}
 	}();
 
-	function func ( listMassage, user ){
+	function checkAutorMessage ( listMassage, user ){
 		var userName = $(listMassage).find('.user_name:last')[0].dataset.name;
-		debugger;
+
 		if ( userName === USER && user === USER ) return '';
 			return user;
-
 	};
 
 
@@ -176,7 +175,7 @@
 			newHtml = render({
 
 				id       : data.id,
-				name     : data.user,//func( this.container, data.user ),
+				name     : checkAutorMessage( this.container, data.user ),
 				dataName : data.user,
 				content  : data.content,
 				time     : getHoursAndMinutes( data.time )
