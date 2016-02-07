@@ -40,8 +40,8 @@ initStorage( config )
             theme : req.cookies.theme
         });
     });
-    app.get('/theme/:themename?', function (req, res, next){
-        res.cookie('theme', req.params.themename, {
+    app.get('/settings/theme', function (req, res, next){
+        res.cookie('theme', req.query.url, {
             expires: new Date(Date.now() +  10 * 365 * 24 * 60 * 60),
             Path : '/'
         });
