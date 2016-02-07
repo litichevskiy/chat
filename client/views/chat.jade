@@ -8,6 +8,9 @@ html
         link(rel="stylesheet", href='/blocks/block_messagePost/block_message.css')
         link(rel="stylesheet", href='/blocks/block_message_content/block_message_content.css')
         link(rel="stylesheet", href="/blocks/block_users/block_users.css" )
+        - if ( theme !== 'undefined' ) {
+            link(rel="stylesheet", href="/css/themes/#{theme}.css")
+        - }
         //- link(rel="shortcut icon", href="your_image_path_and_name.ico")
 
         script(src="/js/jquery.min.js")

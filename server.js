@@ -35,7 +35,17 @@ initStorage( config )
 
 
     app.get('/', auth.check, function( req, res, next ){
-        res.render('chat.jade', {login : req.user } )
+        res.render('chat.jade', {
+            login : req.user,
+            theme : req.cookies.theme
+        });
+    });
+    app.get('/theme/:themename?', function (req, res, next){
+        res.cookie('theme', req.params.themename, {
+            expires: new Date(Date.now() +  10 * 365 * 24 * 60 * 60),
+            Path : '/'
+        });
+        res.redirect('/');
     });
     app.get('/login', function( req, res, next ){
         res.render('user_login.jade')
