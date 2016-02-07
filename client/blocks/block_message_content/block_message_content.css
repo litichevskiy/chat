@@ -22,7 +22,7 @@ button[data-role="exit"]{
 .message_content{
 	word-wrap: break-word;
 	word-break: break-all;
-	white-space: inherit;
+	white-space: pre-wrap;
 	color: #464545;
 	/*color:#333;*/
 }
