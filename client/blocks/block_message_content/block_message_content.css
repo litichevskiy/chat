@@ -13,7 +13,9 @@ button[data-role="exit"]{
 }
 .user_date{
 	font-size: small;
-	margin-bottom: -4px;
+	margin-top: 0.5em;
+	float: left;
+	/*margin-bottom: -4px;*/
 }
 .user_name{
 	margin-right: 1em;
@@ -91,8 +93,5 @@ input:checked ~ .soundOf {
 	display: none;
 }
 .block_userName_and_content{
-	width: 95%;
-	position: relative;
-	right: -5%;
-	top: -1.3em;
+	margin-left: 3em;
 }
