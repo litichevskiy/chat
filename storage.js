@@ -23,7 +23,10 @@ var q_mysql = require('./q_mysql'),
 Q.longStackSupport = true; // ????????
 
 function initStorage ( init_config ){
+	var RECONECT_AFTER = init_config.RECONECT_AFTER || 10000, // 10 sec.
+		D = Q.defer();
 
+	console.log('CONNECTING TO DB...');
 	config = init_config;
 
 	connection = q_mysql.createConnection({
@@ -33,31 +36,41 @@ function initStorage ( init_config ){
 	        port     : config.mysqlPort || 3306
 	    });
 
-	connection.connect();
+	connection.connect(function(error) {
+  		if (error) {
+    		console.error('CONNECTION ERROR : ' + error.stack);
+    		setTimeout(initStorage.bind(null, init_config), RECONECT_AFTER);
+    		return;
+  		}
 
-	// connection.on('error', function(err) {
- //    	console.log('db error', err);
- //    	if(err.code === 'PROTOCOL_CONNECTION_LOST') {
- //      		initStorage ( init_config )
- //    	} else {
+  		console.log('CONNECTED TO DB');
 
- //      		throw err;
- //    	}
- //  	});
+		connection._realConnection.on('error',function(err){
+			console.log('DB ERROR : ', err);
+			if(err.code === 'PROTOCOL_CONNECTION_LOST'){
+				setTimeout(initStorage.bind(null, init_config), RECONECT_AFTER);
+			}
+		});
 
-	return checkBDExists(config, connection)
-	.fail(function(error){
-		if ( typeof error !== 'boolean' ) return Q.reject(error);
-		return createBD(config, connection);
-	})
-	.then(function(){
-		console.log('USE DB: ')
-		return connection.query('use '+config.nameDataBase)
-		.then(function(){
-			console.log('>> use '+ config.nameDataBase)
-			return Q.resolve(storage);
+		checkBDExists(config, connection)
+		.fail(function(error){
+			if ( typeof error !== 'boolean' ) return D.reject(error);
+			return createBD(config, connection);
 		})
+		.then(function(){
+			console.log('USE DB: ')
+			return connection.query('use '+config.nameDataBase)
+			.then(function(){
+				console.log('>> use '+ config.nameDataBase)
+				return D.resolve(storage);
+			})
+			.fail(function(error){
+				D.reject(error);
+			})
+		});
 	});
+
+	return D.promise;
 };
 
 function checkBDExists (config, connection) {

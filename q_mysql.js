@@ -6,10 +6,11 @@ module.exports = {
 	createConnection : function ( config ) {
 
 		var real_connection = mysql.createConnection(config),
+
 			wrapped_connection = {
 
-				connect : function () {
-					return real_connection.connect()
+				connect : function (func) {
+					return real_connection.connect(func)
 				},
 
 				query : function ( query ) {
@@ -22,7 +23,9 @@ module.exports = {
 					})
 
 					return defer.promise;
-				}
+				},
+
+				_realConnection : real_connection
 
 			};
 
