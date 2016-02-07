@@ -17,13 +17,14 @@ button[data-role="exit"]{
 }
 .user_name{
 	margin-right: 1em;
-	font-family: cursive;
+	font-family: monospace;
 }
 .message_content{
 	word-wrap: break-word;
 	word-break: break-all;
 	white-space: pre-wrap;
 	color: #464545;
+	font-family: monospace;
 	/*color:#333;*/
 }
 div[data-role="load"]{

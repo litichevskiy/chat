@@ -35,6 +35,16 @@ function initStorage ( init_config ){
 
 	connection.connect();
 
+	// connection.on('error', function(err) {
+ //    	console.log('db error', err);
+ //    	if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+ //      		initStorage ( init_config )
+ //    	} else {
+
+ //      		throw err;
+ //    	}
+ //  	});
+
 	return checkBDExists(config, connection)
 	.fail(function(error){
 		if ( typeof error !== 'boolean' ) return Q.reject(error);
