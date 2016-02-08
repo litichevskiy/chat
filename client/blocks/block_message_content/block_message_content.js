@@ -23,7 +23,8 @@
 		storageUnReadMessage = [],
 		lastMessage,
 		unread_message = false,
-		new_Day;
+		new_Day,
+		autorMessage;
 
 	var theBlock;
 
@@ -157,10 +158,15 @@
 		}
 	}();
 
-	function checkAutorMessage ( listMassage, user ){
-		var userName = $(listMassage).find('.user_name:last')[0].dataset.name;
+	function checkAutorMessage ( user ){
 
-		if ( userName === USER && user === USER ) return '';
+		if ( !autorMessage ){
+			autorMessage = user
+			return user;
+		}
+
+		if ( user === autorMessage ) return '';
+			autorMessage = user;
 			return user;
 	};
 
@@ -175,7 +181,7 @@
 			newHtml = render({
 
 				id       : data.id,
-				name     : checkAutorMessage( this.container, data.user ),
+				name     : checkAutorMessage( data.user ),
 				dataName : data.user,
 				content  : data.content,
 				time     : getHoursAndMinutes( data.time )
@@ -220,10 +226,11 @@
 
 			listMassage = render({
 
-				id      : data.id,
-				name    : data.user,
-				content : data.content,
-				time    : getHoursAndMinutes(data.time)
+				id       : data.id,
+				name     : data.user, // ??? chech Autor message
+				dataName : data.user,
+				content  : data.content,
+				time     : getHoursAndMinutes(data.time)
 			});
 
 			if ( checkPresenceLink( listMassage ) ) {

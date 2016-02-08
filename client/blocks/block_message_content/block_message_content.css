@@ -94,4 +94,7 @@ input:checked ~ .soundOf {
 }
 .block_userName_and_content{
 	margin-left: 3em;
+	word-wrap: break-word;
+	word-break: break-all;
+	white-space: pre-wrap;
 }

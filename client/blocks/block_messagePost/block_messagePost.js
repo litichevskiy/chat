@@ -3,6 +3,7 @@
     const
         REGEXP_TIME        = /.+?:\d\d\b/,
         REGEXP_CHECK_EMPTY_STRING = /^[\t\s\n\r]+$/,
+        SEARCH_NEW_LINE =/[\n\r]/g,
         KEYDOWN_ENTER      = 13,
         MAX_LEHGTH_MESSAGE = 1000,
         MAX_ROWS_TEXTAREA  = 10;
@@ -64,7 +65,7 @@
 
         $(textarea).keyup(function(event) {
 
-            if ( event.ctrlKey === false && event.keyCode === KEYDOWN_ENTER ) {
+            if ( event.shiftKey === false && event.keyCode === KEYDOWN_ENTER ) {
                 return postMessage();
             }
 
@@ -81,24 +82,28 @@
         });
 
         $(textarea).keydown(function(event) {
-            var val;
 
-            if ( event.ctrlKey === true && event.keyCode === KEYDOWN_ENTER ) {
-                val = $(this).val()
-                $(this).val(val + '\n');
-                this.scrollHeight;
-                this.scrollTop = this.scrollHeight;
+            if ( event.shiftKey === true && event.keyCode === KEYDOWN_ENTER ) {
 
-                if ( this.rows === MAX_ROWS_TEXTAREA )return
-                    this.rows += 1;
+                if ( FIREFOX ) {
+                    replaceHeightBlockMessages();
+                }
 
-                    if ( FIREFOX ) {
-                        replaceHeightBlockMessages();
-
-                    }
+                if ( this.rows > MAX_ROWS_TEXTAREA )return event.preventDefault();
             }
         });
 
+
+        $(textarea)[0].oninput = function ( event ) {
+            var rows;
+
+            rows = ( $(this).val() ).match( SEARCH_NEW_LINE );
+
+           if (  !rows  ) return;
+
+            if ( rows.length <= MAX_ROWS_TEXTAREA ) this.rows = rows.length+1;
+            else this.rows = rows.length+1;
+        };
 
         $(post).click(function(event) {
 

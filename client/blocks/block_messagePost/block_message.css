@@ -4,11 +4,11 @@
 	margin-bottom: 0;
 }
 button[data-name="postMessage"]{
-	outline: none;
-	margin: 2% 0.5% 0 0;
-	width:5%;
-	height:40%;
-	padding:0;
+	outline	: none;
+	margin  : 2% 0.5% 0 0;
+	width   :5%;
+	height  :3em;
+	padding :0;
 	background-color: #C1EBFF;
 	border: none;
 }
