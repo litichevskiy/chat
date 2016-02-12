@@ -1,0 +1,75 @@
+.selectMenu{
+	position:absolute;
+	top:5%;
+	left: 0;
+	width: 2.5em;
+	background-color: aliceblue;
+	z-index: 1;
+}
+.menu{
+	margin-bottom: 0;
+}
+.elementmenu{
+	margin:0.5em 0.3em 0 0.3em;
+}
+.elementmenu:hover{
+	cursor:pointer;
+}
+.blockSettings{
+	display: none;
+	position: absolute;
+	top:0;
+	left:0;
+	height: 100%;
+	width:30%;
+}
+.select__{
+	margin:2em 1em 0 3em;
+	border-radius: 0.5em;
+}
+.soundOf, span[data-role="new message"]:hover{
+	cursor: pointer;
+}
+span.sound:hover{
+	cursor:pointer;
+}
+input[data-role="sound"]{
+	display: none;
+}
+input[data-role="sound"] ~ .soundOf {
+	display: inherit;
+	margin-top: 0.5;
+}
+input[data-role="sound"]:not(:checked) ~ .sound {
+	display: none;
+}
+input[data-role="sound"]:checked ~ .soundOf {
+	display: none;
+}
+.selectThemes{
+	margin: 0.5em 0 0 3em;
+	display:none;
+}
+.theme{
+	font-size: x-large;
+	color:#60AFF3;
+	font-family: monospace;
+	border-bottom-right-radius: 0.5em;
+	border-top-right-radius: 0.5em;
+	margin: 0 1em 0.4em 0;
+}
+.theme:hover{
+	cursor:pointer;
+	background-color: #dff0d8;
+}
+input[data-role="themeUser"]{
+	width:70%;
+	float: left;
+	margin-right: 0.5em;
+}
+span.value,
+span.notValue,
+span.exit,
+span.settings{
+	font-size: 200%;
+}

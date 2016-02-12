@@ -8,6 +8,8 @@ html
         link(rel="stylesheet", href='/blocks/block_messagePost/block_message.css')
         link(rel="stylesheet", href='/blocks/block_message_content/block_message_content.css')
         link(rel="stylesheet", href="/blocks/block_users/block_users.css" )
+        link(rel="stylesheet", href="/blocks/blockMenu/blockMenu.css" )
+
         - if ( theme !== 'undefined' ) {
             link(rel="stylesheet", href="#{theme}")
         - }
@@ -18,34 +20,49 @@ html
         script(src="/js/jade.min.js")
         script(src='/socket.io/socket.io.js')
     body
-        .container
-            .row
-                .col-md-3.col-sm-3.col-lg-3.col-xs-3
-                    .column(data-role='block_users')
-                .tableMessage.col-md-9.col-sm-9.col-lg-9.col-xs-9
-                    .rowSelect
-                        .cellSelect
-                            .selection_panel
-                                span.glyphicon.glyphicon-comment(data-role='new message')
-                                div(data-role='sound')
-                                    label
-                                        input(data-role='sound' type='checkbox' checked)
-                                        span.sound.glyphicon.glyphicon-volume-up
-                                        span.soundOf.glyphicon.glyphicon-volume-off
-                                button.btn.btn-warning(data-role='exit') Exit
-                                audio(data-role = 'ringtoneMessage' src = src="        /ringtone/rington_newMessage_1.mp3" type="audio/mpeg")
-                    .rowMessageContent
-                        .cellMessageContent
-                            .column(data-role='block_message_content')
-                                div(data-role='load').text-center.text-primary loading ...
-                    .rowMessagePost
-                        .cellMessagePost
-                            .column(data-role='block_message')
-                                span.text-danger.warning-message
-                                .form-group
-                                    textarea.form-control(data-role='message' rows=1 autofocus )
-                                    button.btn.btn-default(data-name='postMessage')
-                                        span.glyphicon.glyphicon-send
+        .container_chat
+            .column(data-role='block_users')
+            .tableMessage
+                .rowSelect
+                    .cellSelect
+                        .selection_panel
+                            span.glyphicon.glyphicon-comment(data-role='new message')
+                            audio(data-role = 'ringtoneMessage' src = src="/ringtone/rington_newMessage_1.mp3" type="audio/mpeg")
+                .rowMessageContent
+                    .cellMessageContent
+                        .column(data-role='block_message_content')
+                            div(data-role='load').text-center.text-primary loading ...
+                .rowMessagePost
+                    .cellMessagePost
+                        .column(data-role='block_message')
+                            span.text-danger.warning-message
+                            .form-group
+                                textarea.form-control(data-role='message' rows=1 autofocus )
+                                button.btn.btn-default(data-name='postMessage')
+                                    span.glyphicon.glyphicon-send
+            .selectMenu
+                ul.list-unstyled.menu
+                    li.elementmenu
+                        span.glyphicon.glyphicon-off.exit(data-role='exit')
+                    li.elementmenu
+                        span.glyphicon.glyphicon-cog.settings
+                    li.elementmenu
+                        label
+                            input(data-role='sound' type='checkbox' checked)
+                            span.sound.glyphicon.glyphicon-volume-up.value
+                            span.soundOf.glyphicon.glyphicon-volume-off.notValue
+
+            .blockSettings
+                .bg-success.select__
+                    button.btn.btn-default.openCloseBlockTheme themes
+                .selectThemes
+                    ul.list-unstyled.listTheme
+                        li.theme(data-linkToCss='/css/themePink.css') pink
+                        li.theme(data-linkToCss='/css/themeDark.css') dark
+                        li.theme(data-linkToCss='/css/index.css') default
+                        li
+                            input(data-role='themeUser' placeholder='link to css').form-control
+                            button.btn.btn-default.applayTheme apply
 
         script(src="/js/PubSub.js")
         script(src="/js/serverAPI.js")
@@ -56,4 +73,5 @@ html
         script(src="/blocks/block_users/block_users.js")
         script.
             var login = '#{login}';
-        script(src='/js/main.js') /home/sl/p/chat/client/blocks/block_users.js
+        script(src='/js/main.js')
+        script(src='/blocks/blockMenu/blockMenu.js')

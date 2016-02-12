@@ -1,0 +1,10 @@
+.container_chat{
+	background-color: rgba(255, 184, 162, 0.75);
+}
+.offline{
+	color:#DC7959;
+	font-family: monospace;
+}
+.user_name{
+	color:#CA7B62;
+}

@@ -25,7 +25,7 @@
 
         function replaceHeightBlockMessages () {
             var blockMessage = $('.column[data-role="block_message_content"]'),
-                containerHeight = $('.container').height() - 10,
+                containerHeight = $('.container_chat').height() - 10,
                 blockPostHeight = $('.column[data-role="block_message"]').height();
 
             $(blockMessage).height( containerHeight - blockPostHeight );

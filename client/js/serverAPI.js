@@ -3,7 +3,7 @@ var serverAPI = (function() {
 	return {
 
 		getMessage : function( data ) {
-			
+
 			var defer = $.Deferred();
 
 			$.ajax({
@@ -16,7 +16,7 @@ var serverAPI = (function() {
 				},
 			})
 			.then(function(res){
-				
+
 				if ( res.status === 400 ) console.log( res );
 				defer.resolve( res.listMassage );
 			})
@@ -30,7 +30,7 @@ var serverAPI = (function() {
 		},
 
 		createMessage : function( data ) {
-			
+
 			var defer = $.Deferred();
 
 			$.ajax({
@@ -56,7 +56,7 @@ var serverAPI = (function() {
 		},
 
 		createUser : function( user ) {
-			
+
 			var defer = $.Deferred();
 
 			$.ajax({
@@ -114,8 +114,8 @@ var serverAPI = (function() {
 				dataType: 'json',
 			})
 			.then(function( list ) {
-				
-				pubsub.publish( 'listUsers', list.list ); 
+
+				pubsub.publish( 'listUsers', list.list );
 				defer.resolve();
 			})
 			.fail(function(err)  {
@@ -148,7 +148,7 @@ var serverAPI = (function() {
 
 		on : function ( event, func ) {
 			pubsub.subscribe( event, func )
-		} 
+		}
 	}
 
 })();

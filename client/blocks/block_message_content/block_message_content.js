@@ -326,7 +326,7 @@
 			currentMessage = storageUnReadMessage[0].getBoundingClientRect()
 
 			if ( currentMessage.bottom  <= bottomBlockMessage.bottom ) {
-
+				console.log( currentMessage.bottom, bottomBlockMessage.bottom ,storageUnReadMessage )
 				storageUnReadMessage.splice( 0, 1);
 				countNewMessage -= 1;
 				$(announcement).html( countNewMessage );

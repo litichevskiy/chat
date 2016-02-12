@@ -1,21 +1,12 @@
-button[data-role="exit"]{
-	margin-right: 1em;
-	padding:0.1em;
-	width: 3em;
-}
 .list-unstyled.list_message{
 	font-size: 1.5em;
 	width: 98%;
 	margin-top: 2%;
 }
-.list_message li[data-id_message]{
-	/*padding-bottom: 0.5em;*/
-}
 .user_date{
 	font-size: small;
 	margin-top: 0.5em;
 	float: left;
-	/*margin-bottom: -4px;*/
 }
 .user_name{
 	margin-right: 1em;
@@ -27,30 +18,13 @@ button[data-role="exit"]{
 	white-space: pre-wrap;
 	color: #464545;
 	font-family: monospace;
-	/*color:#333;*/
 }
 div[data-role="load"]{
 	display: none;
 	font-size: xx-large;
 }
 span[data-role="new message"]{
-	height: 2em;
 	display:none;
-	margin-right: 0;
-	margin-top: 0.2em;
-}
-.soundOf, span[data-role="new message"]:hover{
-	cursor: pointer;
-}
-div[data-role="sound"]{
-	margin-right: 1em;
-	margin-top: 0.3em;
-}
-span.sound {
-	margin-right: 0em;
-}
-span.sound:hover{
-	cursor:pointer;
 }
 .separate{
 	padding-left: 4em;
@@ -63,34 +37,14 @@ span.lead{
 }
 .selection_panel{
 	position:absolute;
-	right:1em;
-	width:32%;
-	display:flex;
-	justify-content: flex-end;
-	height: 2.5em;
-	opacity: 0.3;
+	right:3em;
+	top:1em;
+	opacity: 0.5;
 	z-index: 1;
 }
 .selection_panel:hover{
 	opacity:1;
 	cursor:pointer;
-}
-.soundOf{
-	display: none;
-	margin-right: 0;
-}
-input{
-	visibility: hidden;
-}
-input ~ .soundOf {
-	display: inherit;
-	margin-top: 0.5;
-}
-input:not(:checked) ~ .sound {
-	display: none;
-}
-input:checked ~ .soundOf {
-	display: none;
 }
 .block_userName_and_content{
 	margin-left: 3em;

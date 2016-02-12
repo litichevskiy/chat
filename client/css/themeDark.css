@@ -1,0 +1,62 @@
+.container_chat{
+	background-color:#2D2B2B;
+}
+.user_name{
+	color:#6ABB62;
+}
+.offline{
+	color:#449DA9;
+	opacity:0.4;
+}
+.online{
+	color:#C3BFBF;
+}
+.user_date{
+	color: #61899C;
+}
+.message_content{
+	color: #9C9595;
+}
+textarea[data-role="message"]{
+	background-color: transparent;
+	color:#CAC5C5;
+	border:none;
+}
+textarea[data-role="message"]:focus{
+	box-shadow: none;
+	color:#CAC5C5;
+}
+.selectMenu{
+	background-color: #565A5F;
+}
+span.value,
+span.notValue,
+span.exit,
+span.settings
+{
+	color:#798590;
+}
+button[data-name="postMessage"]{
+	background-color:#798590;
+}
+button[data-name="postMessage"]:hover{
+	background-color:#798590;
+}
+input[data-role="themeUser"]{
+	background-color: transparent;
+}
+.applayTheme{
+	background-color: #ADA9A9;
+}
+.select__{
+	background-color:#686F66;
+}
+.theme:hover{
+	background-color:#686F66;
+}
+.separate{
+	background-color: #50555A;
+}
+.openCloseBlockTheme{
+	background-color:#686F66;
+}
