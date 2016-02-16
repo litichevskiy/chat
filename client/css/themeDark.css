@@ -60,3 +60,6 @@ input[data-role="themeUser"]{
 .openCloseBlockTheme{
 	background-color:#686F66;
 }
+.list_users{
+	margin:2% 1% 0 1.5em;
+}
